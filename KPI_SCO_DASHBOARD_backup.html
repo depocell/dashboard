@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KPI SCO Dashboard | My Astaga!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --ink: #0f2744;
+  --muted: #6b8499;
+  --line: #e2ebf2;
+  --blue: #0b7eb8;
+  --green: #0d9f6e;
+  --amber: #d97706;
+  --red: #dc3545;
+  --paper: #ffffff;
+  --bg: #f4f8fb;
+  --shadow: 0 8px 24px rgba(15,39,68,.07);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  background: linear-gradient(180deg, #f8fbfd 0%, #eef4f8 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 28px 20px; }
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--blue), #0a6a9a);
+  border-radius: 14px;
+  display: grid; place-items: center;
+  color: #fff; font-size: 20px;
+}
+.title { font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
+.subtitle { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.refresh {
+  border: 0; border-radius: 11px;
+  padding: 11px 18px;
+  background: linear-gradient(135deg, var(--blue), #0a6a9a);
+  color: #fff; font: 700 13px inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(11,126,184,.22);
+  display: flex; align-items: center; gap: 8px;
+}
+.refresh:disabled { opacity: .65; cursor: wait; }
+
+/* Controls */
+.controls {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.field select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 12px;
+  font: 500 13px inherit;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+.field select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(11,126,184,.12);
+}
+.sync {
+  font-size: 11px;
+  color: var(--muted);
+  padding-bottom: 10px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot.green { background: var(--green); }
+.dot.yellow { background: var(--amber); }
+.dot.red { background: var(--red); }
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+.card .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.card .icon {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  font-size: 14px;
+}
+.card:nth-child(1) .icon { background: #e8f4fc; color: var(--blue); }
+.card:nth-child(2) .icon { background: #e8f8f1; color: var(--green); }
+.card:nth-child(3) .icon { background: #fef6e6; color: var(--amber); }
+.card:nth-child(4) .icon { background: #fce8eb; color: var(--red); }
+.card .value {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+.card .note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Table */
+.table-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.table-head {
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+.table-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+.table-title i { color: var(--blue); margin-right: 8px; }
+.table-note { font-size: 12px; color: var(--muted); }
+.table-wrap { overflow: auto; max-height: 560px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 980px;
+}
+th {
+  position: sticky;
+  top: 0;
+  background: #f3f8fb;
+  padding: 11px 10px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: #4d6b7f;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #edf2f5;
+  white-space: nowrap;
+}
+tbody tr:hover { background: #f7fbfd; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.name { font-weight: 700; }
+.bulan-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef5f9;
+  color: #3d5f75;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge.green { background: #e6f7f0; color: #0a7a54; }
+.badge.yellow { background: #fef6e6; color: #b45309; }
+.badge.red { background: #fde8eb; color: #b91c1c; }
+.badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 16px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .controls { grid-template-columns: 1fr 1fr; }
+  .sync { grid-column: 1 / -1; text-align: left; padding-bottom: 0; }
+}
+@media (max-width: 560px) {
+  .cards { grid-template-columns: 1fr; }
+  .controls { grid-template-columns: 1fr; }
+  .header { flex-direction: column; align-items: flex-start; }
+  .refresh { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-chart-pie"></i></div>
+      <div>
+        <div class="title">KPI SCO Dashboard</div>
+        <div class="subtitle">Monitoring performa Sales Collection Officer</div>
+      </div>
+    </div>
+    <button class="refresh" id="refresh">
+      <i class="fa-solid fa-rotate"></i> Refresh Data
+    </button>
+  </header>
+
+  <section class="controls">
+    <div class="field">
+      <label>Bulan</label>
+      <select id="bulan"></select>
+    </div>
+    <div class="field">
+      <label>Nama SCO</label>
+      <select id="nama"></select>
+    </div>
+    <div class="sync" id="sync">Memuat data...</div>
+  </section>
+
+  <div class="legend">
+    <span><i class="dot green"></i> ≥ 90% Baik</span>
+    <span><i class="dot yellow"></i> 70% – 89% Perlu perhatian</span>
+    <span><i class="dot red"></i> &lt; 70% Di bawah target</span>
+  </div>
+
+  <section class="cards">
+    <div class="card">
+      <div class="top">
+        <span>Rata-rata KPI Score</span>
+        <span class="icon"><i class="fa-solid fa-gauge-high"></i></span>
+      </div>
+      <div class="value" id="avgScore">—</div>
+      <div class="note">Dari data terfilter</div>
+    </div>
+    <div class="card">
+      <div class="top">
+        <span>Total Insentif</span>
+        <span class="icon"><i class="fa-solid fa-money-bill-wave"></i></span>
+      </div>
+      <div class="value" id="totalInsentif">—</div>
+      <div class="note">Akumulasi insentif</div>
+    </div>
+    <div class="card">
+      <div class="top">
+        <span>Jumlah SCO</span>
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+      </div>
+      <div class="value" id="countSCO">—</div>
+      <div class="note">Orang terfilter</div>
+    </div>
+    <div class="card">
+      <div class="top">
+        <span>Avg Growth Trx</span>
+        <span class="icon"><i class="fa-solid fa-arrow-trend-up"></i></span>
+      </div>
+      <div class="value" id="avgGrowth">—</div>
+      <div class="note">Pertumbuhan transaksi</div>
+    </div>
+  </section>
+
+  <section class="table-card">
+    <div class="table-head">
+      <div class="table-title"><i class="fa-solid fa-table-list"></i>Detail KPI per SCO</div>
+      <div class="table-note" id="tableNote">—</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Bulan</th>
+            <th>Nama SCO</th>
+            <th class="num">#PJP</th>
+            <th class="num">Visit Ach</th>
+            <th>% Visit</th>
+            <th class="num">Coll Ach</th>
+            <th>% Coll</th>
+            <th class="num">Trx Ach</th>
+            <th>% Trx</th>
+            <th>% Growth</th>
+            <th>KPI Score</th>
+            <th class="num">Insentif</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+const CONFIG = {
+  excelFile: './DATA_DASHBOARD.xlsx',
+  sheetName: 'KPI_SCO'
+};
+
+let data = [];
+const $ = id => document.getElementById(id);
+
+// Number helpers
+const num = x => {
+  let s = String(x ?? '').replace(/[^0-9,.-]/g, '');
+  if (s.includes(',') && s.includes('.')) {
+    s = s.lastIndexOf(',') > s.lastIndexOf('.')
+      ? s.replace(/\./g, '').replace(',', '.')
+      : s.replace(/,/g, '');
+  } else if (s.includes(',')) {
+    s = s.replace(',', '.');
+  }
+  return parseFloat(s) || 0;
+};
+
+const pct = x => {
+  let s = String(x ?? '').replace('%', '').trim();
+  return num(s);
+};
+
+const money = n => {
+  n = n || 0;
+  if (n >= 1e6) return 'Rp ' + (n / 1e6).toFixed(1) + ' jt';
+  return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+};
+
+const fnum = n => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(n || 0);
+const esc = x => String(x ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// Color status based on percentage
+function statusClass(p) {
+  if (p >= 90) return 'green';
+  if (p >= 70) return 'yellow';
+  return 'red';
+}
+
+function badge(p, suffix = '%') {
+  const cls = statusClass(p);
+  return `<span class="badge ${cls}">${fnum(p)}${suffix}</span>`;
+}
+
+// CSV parser
+function csv(t) {
+  let o = [], r = [], c = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    let x = t[i], n = t[i + 1];
+    if (x === '"') {
+      if (q && n === '"') { c += '"'; i++; }
+      else q = !q;
+    } else if (x === ',' && !q) {
+      r.push(c); c = '';
+    } else if ((x === '\n' || x === '\r') && !q) {
+      if (x === '\r' && n === '\n') i++;
+      r.push(c);
+      if (r.some(v => v.trim())) o.push(r);
+      r = []; c = '';
+    } else c += x;
+  }
+  r.push(c);
+  if (r.some(v => v.trim())) o.push(r);
+  return o;
+}
+
+function parse(t) {
+  const rows = csv(t);
+  if (rows.length < 2) throw Error('Sheet kosong');
+
+  // Clean headers
+  const h = rows.shift().map(x => x.replace(/\n/g, ' ').trim().toUpperCase());
+
+  const find = (...names) => h.findIndex(col => names.some(n => col.includes(n)));
+
+  const ix = {
+    bulan: find('BULAN'),
+    nama: find('NAMA'),
+    pjp: find('#PJP', 'PJP'),
+    tgtVisit: find('TGT', 'VISIT') >= 0 ? h.findIndex(c => c.includes('TGT') && c.includes('VISIT')) : -1,
+    achVisit: find('ACH', 'VISIT') >= 0 ? h.findIndex(c => c.includes('ACH') && c.includes('VISIT') && !c.includes('%')) : -1,
+    pctVisit: find('% ACH') >= 0 ? h.findIndex((c, i) => c.includes('%') && c.includes('ACH') && i < 6) : -1,
+    tgtColl: h.findIndex(c => c.includes('TGT') && c.includes('COLL')),
+    achColl: h.findIndex(c => c.includes('ACH') && c.includes('COLL') && !c.includes('%')),
+    pctColl: h.findIndex(c => (c.includes('%ACH') || (c.includes('%') && c.includes('ACH'))) && h.indexOf(c) > 6 && h.indexOf(c) < 10),
+    tgtTrx: h.findIndex(c => c.includes('TGT') && c.includes('TRX')),
+    achTrx: h.findIndex(c => c.includes('ACH') && c.includes('TRX') && !c.includes('%')),
+    pctTrx: (() => {
+      // third % Ach
+      const idxs = h.map((c, i) => (c.includes('%') && c.includes('ACH') ? i : -1)).filter(i => i >= 0);
+      return idxs[2] ?? -1;
+    })(),
+    trxLalu: h.findIndex(c => c.includes('TRX') && c.includes('LALU')),
+    trxIni: h.findIndex(c => c.includes('TRX') && c.includes('INI')),
+    growth: find('GROWTH'),
+    score: find('KPI', 'SCORE', 'TOTAL'),
+    insentif: find('INSENTIF')
+  };
+
+  // Simpler column mapping by position (more reliable given the structure)
+  return rows.map(r => {
+    const clean = r.map(c => c.replace(/\n/g, ' ').trim());
+    return {
+      bulan: clean[0] || '',
+      nama: clean[1] || '',
+      pjp: num(clean[2]),
+      tgtVisit: num(clean[3]),
+      achVisit: num(clean[4]),
+      pctVisit: pct(clean[5]),
+      tgtColl: num(clean[6]),
+      achColl: num(clean[7]),
+      pctColl: pct(clean[8]),
+      tgtTrx: num(clean[9]),
+      achTrx: num(clean[10]),
+      pctTrx: pct(clean[11]),
+      trxLalu: num(clean[12]),
+      trxIni: num(clean[13]),
+      growth: pct(clean[14]),
+      score: pct(clean[15]),
+      insentif: num(String(clean[16]).replace(/Rp|\./g, '').replace(',', '.'))
+    };
+  }).filter(x => x.nama && x.bulan);
+}
+
+function fill(id, vals) {
+  const keep = $(id).value;
+  const unique = [...new Set(vals)].filter(Boolean);
+  // Sort bulan chronologically-ish
+  if (id === 'bulan') {
+    const order = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'May', 'Jun', 'Jul', 'Agu', 'Aug', 'Sep', 'Okt', 'Oct', 'Nov', 'Des', 'Dec'];
+    unique.sort((a, b) => {
+      const ma = order.findIndex(m => a.toLowerCase().startsWith(m.toLowerCase()));
+      const mb = order.findIndex(m => b.toLowerCase().startsWith(m.toLowerCase()));
+      return (ma === -1 ? 99 : ma) - (mb === -1 ? 99 : mb);
+    });
+  } else {
+    unique.sort((a, b) => a.localeCompare(b, 'id'));
+  }
+  $(id).innerHTML = '<option value="">Semua</option>' +
+    unique.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  if (unique.includes(keep)) $(id).value = keep;
+}
+
+function filters(skip = '') {
+  const b = $('bulan').value;
+  const n = $('nama').value;
+  return data.filter(x =>
+    (skip === 'bulan' || !b || x.bulan === b) &&
+    (skip === 'nama' || !n || x.nama === n)
+  );
+}
+
+function syncFilters() {
+  fill('bulan', filters('bulan').map(x => x.bulan));
+  fill('nama', filters('nama').map(x => x.nama));
+}
+
+function render() {
+  syncFilters();
+  const d = filters();
+
+  // Cards
+  const avg = k => d.length ? d.reduce((s, x) => s + x[k], 0) / d.length : 0;
+  const sum = k => d.reduce((s, x) => s + x[k], 0);
+
+  $('avgScore').innerHTML = badge(avg('score'));
+  $('totalInsentif').textContent = money(sum('insentif'));
+  $('countSCO').textContent = fnum([...new Set(d.map(x => x.nama))].length);
+  const g = avg('growth');
+  $('avgGrowth').innerHTML = `<span class="badge ${g >= 0 ? 'green' : 'red'}">${g >= 0 ? '+' : ''}${fnum(g)}%</span>`;
+
+  // Table
+  const sorted = [...d].sort((a, b) => b.score - a.score);
+  $('tableBody').innerHTML = sorted.length
+    ? sorted.map(x => `
+      <tr>
+        <td><span class="bulan-tag">${esc(x.bulan)}</span></td>
+        <td class="name">${esc(x.nama)}</td>
+        <td class="num">${fnum(x.pjp)}</td>
+        <td class="num">${fnum(x.achVisit)}</td>
+        <td>${badge(x.pctVisit)}</td>
+        <td class="num">${fnum(x.achColl)}</td>
+        <td>${badge(x.pctColl)}</td>
+        <td class="num">${fnum(x.achTrx)}</td>
+        <td>${badge(x.pctTrx)}</td>
+        <td><span class="badge ${x.growth >= 0 ? 'green' : 'red'}">${x.growth >= 0 ? '+' : ''}${fnum(x.growth)}%</span></td>
+        <td>${badge(x.score)}</td>
+        <td class="num">${money(x.insentif)}</td>
+      </tr>`).join('')
+    : '<tr><td colspan="12" class="empty">Tidak ada data sesuai filter.</td></tr>';
+
+  $('tableNote').textContent = sorted.length
+    ? `Menampilkan ${sorted.length} baris (urut KPI Score tertinggi)`
+    : 'Tidak ada data';
+}
+
+function setStatus(msg, isError = false) {
+  const s = $('sync');
+  s.textContent = msg;
+  s.style.color = isError ? 'var(--red)' : 'var(--muted)';
+}
+
+function parseXLSXKPISCO(sheet) {
+  const rawRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
+  return rawRows.map(r => ({
+    bulan: String(r['BULAN'] || r['Bulan'] || r['Month'] || '').trim(),
+    nama: String(r['NAMA'] || r['Nama'] || r['SCO'] || '').trim(),
+    pjp: num(r['#PJP'] || r['PJP']),
+    tgtVisit: num(r['TGT VISIT'] || r['Target Visit']),
+    achVisit: num(r['ACH VISIT'] || r['Ach Visit']),
+    pctVisit: pct(r['% ACH VISIT'] || r['% Visit']),
+    tgtColl: num(r['TGT COLL'] || r['Target Coll']),
+    achColl: num(r['ACH COLL'] || r['Ach Coll']),
+    pctColl: pct(r['% ACH COLL'] || r['% Coll']),
+    tgtTrx: num(r['TGT TRX'] || r['Target Trx']),
+    achTrx: num(r['ACH TRX'] || r['Ach Trx']),
+    pctTrx: pct(r['% ACH TRX'] || r['% Trx']),
+    trxLalu: num(r['TRX LALU'] || r['Trx Lalu']),
+    trxIni: num(r['TRX INI'] || r['Trx Ini']),
+    growth: pct(r['% GROWTH'] || r['Growth']),
+    score: pct(r['KPI SCORE'] || r['Total Score'] || r['Score']),
+    insentif: num(r['INSENTIF'] || r['Insentif'])
+  })).filter(x => x.nama && x.bulan);
+}
+
+async function load() {
+  const btn = $('refresh');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat...';
+  setStatus('Mengambil data dari DATA_DASHBOARD.xlsx...');
+
+  try {
+    const url = (CONFIG.excelFile || './DATA_DASHBOARD.xlsx') + '?v=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw Error('HTTP ' + res.status);
+    const buf = await res.arrayBuffer();
+    if (typeof XLSX === 'undefined') throw Error('Library XLSX belum termuat');
+    const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: false, raw: true });
+    const sheet = wb.Sheets[CONFIG.sheetName] || wb.Sheets[wb.SheetNames[0]];
+    if (!sheet) throw Error('Sheet ' + CONFIG.sheetName + ' tidak ditemukan');
+    data = parseXLSXKPISCO(sheet);
+    fill('bulan', data.map(x => x.bulan));
+    fill('nama', data.map(x => x.nama));
+    render();
+    setStatus('Data tersinkron (' + CONFIG.sheetName + ') • ' + new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }));
+  } catch (e) {
+    setStatus('Gagal ambil data: ' + e.message, true);
+    console.error(e);
+    $('sync').innerHTML = `Gagal ambil data: ${esc(e.message)} <label style="text-decoration:underline;cursor:pointer;margin-left:5px;"><input type="file" accept=".xlsx,.xls" style="display:none" onchange="handleManualFileKPI(this)">Pilih File Manual</label>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Refresh Data';
+  }
+}
+
+function handleManualFileKPI(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const buf = e.target.result;
+      const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: false, raw: true });
+      const sheet = wb.Sheets[CONFIG.sheetName] || wb.Sheets[wb.SheetNames[0]];
+      data = parseXLSXKPISCO(sheet);
+      fill('bulan', data.map(x => x.bulan));
+      fill('nama', data.map(x => x.nama));
+      render();
+      setStatus('Data tersinkron dari file manual (' + CONFIG.sheetName + ')');
+    } catch(err) {
+      alert("Gagal membaca file excel: " + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+['bulan', 'nama'].forEach(id => $(id).addEventListener('change', render));
+$('refresh').addEventListener('click', load);
+
+// Auto load on start
+load();
+</script>
+</body>
+</html>
