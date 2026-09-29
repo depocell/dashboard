@@ -1172,10 +1172,25 @@
       <!-- TAB: GROSS MARGIN & CUAN PER TRANSAKSI         -->
       <!-- ============================================== -->
       <section class="tab-view" id="view-margin">
+        <!-- Year Pills Multiselect (Di bawah header) -->
+        <div class="year-pills-bar">
+          <div class="year-pills-title"><i class="fa-solid fa-calendar-check"></i> Filter Tahun:</div>
+          <div class="year-pills-list" id="marginYearPills">
+            <button type="button" class="year-pill all active" onclick="toggleYearPill('margin', 'ALL')">
+              <i class="fa-solid fa-layer-group"></i> Semua Tahun
+            </button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('margin', '2022')">2022</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('margin', '2023')">2023</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('margin', '2024')">2024</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('margin', '2025')">2025</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('margin', '2026')">2026</button>
+          </div>
+        </div>
+
         <div class="filter-toolbar">
           <div class="filter-group">
             <span class="filter-label"><i class="fa-solid fa-filter"></i> Filter Margin:</span>
-            <select class="custom-select" id="marginYearFilter" onchange="renderMargin()"><option value="">Semua Tahun</option></select>
+            <select class="custom-select" id="marginYearFilter" style="display:none;" onchange="renderMargin()"><option value="">Semua Tahun</option></select>
             <select class="custom-select" id="marginBranchFilter" onchange="renderMargin()"><option value="">Semua Cabang</option></select>
             <select class="custom-select" id="marginCatFilter" onchange="renderMargin()"><option value="">Semua Kategori</option></select>
             <select class="custom-select" id="marginOpFilter" onchange="renderMargin()"><option value="">Semua Operator</option></select>
@@ -1223,58 +1238,56 @@
           </div>
         </div>
 
-        <!-- 4 Visual Analytics Charts -->
-        <div class="charts-grid-2">
-          <!-- 1. Tren Cuan per Trx -->
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-arrow-trend-up" style="color:#087eb9;"></i>Tren Cuan / Trx per Bulan</div>
-                <div class="chart-subtitle">Pergerakan rata-rata margin bersih per transaksi (Rp/Trx)</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="cuanTrxChart"></canvas>
+        <!-- 4 Visual Analytics Charts: Vertical Stacked Panels -->
+        <!-- 1. Tren Cuan per Trx -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-arrow-trend-up" style="color:#087eb9;"></i>Tren Cuan / Trx per Bulan</div>
+              <div class="chart-subtitle">Pergerakan rata-rata margin bersih per transaksi (Rp/Trx)</div>
             </div>
           </div>
+          <div class="chart-container-wrap">
+            <canvas id="cuanTrxChart"></canvas>
+          </div>
+        </div>
 
-          <!-- 2. Tren Gross Profit (Rp) -->
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-coins" style="color:#138a5c;"></i>Tren Total Gross Profit (Rp)</div>
-                <div class="chart-subtitle">Akumulasi nominal laba kotor per bulan</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="profitMonthChart"></canvas>
+        <!-- 2. Tren Gross Profit (Rp) -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-coins" style="color:#138a5c;"></i>Tren Total Gross Profit (Rp)</div>
+              <div class="chart-subtitle">Akumulasi nominal laba kotor per bulan</div>
             </div>
           </div>
+          <div class="chart-container-wrap">
+            <canvas id="profitMonthChart"></canvas>
+          </div>
+        </div>
 
-          <!-- 3. Tren Gross Margin % -->
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-chart-pie" style="color:#dd9317;"></i>Tren Gross Margin (%)</div>
-                <div class="chart-subtitle">Persentase margin laba per bulan</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="marginPctChart"></canvas>
+        <!-- 3. Tren Gross Margin % -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-chart-pie" style="color:#dd9317;"></i>Tren Gross Margin (%)</div>
+              <div class="chart-subtitle">Persentase margin laba per bulan</div>
             </div>
           </div>
+          <div class="chart-container-wrap">
+            <canvas id="marginPctChart"></canvas>
+          </div>
+        </div>
 
-          <!-- 4. Profit by Cabang / Channel -->
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-network-wired" style="color:#6b5ddd;"></i>Gross Profit per Cabang / Channel</div>
-                <div class="chart-subtitle">Kontribusi nominal profit per cabang/channel</div>
-              </div>
+        <!-- 4. Profit by Cabang / Channel -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-network-wired" style="color:#6b5ddd;"></i>Gross Profit per Cabang / Channel</div>
+              <div class="chart-subtitle">Kontribusi nominal profit per cabang/channel</div>
             </div>
-            <div class="chart-container-wrap">
-              <canvas id="profitBranchChart"></canvas>
-            </div>
+          </div>
+          <div class="chart-container-wrap">
+            <canvas id="profitBranchChart"></canvas>
           </div>
         </div>
 
@@ -1384,11 +1397,13 @@
       isDark: false,
       selectedYears: {
         sales: [], // empty = all years
-        product: [] // empty = all years
+        product: [], // empty = all years
+        margin: [] // empty = all years
       },
       availableYears: {
         sales: [],
-        product: []
+        product: [],
+        margin: []
       }
     };
 
@@ -2202,11 +2217,11 @@
       const raw = isAstaga ? STATE.rawData.margin_astaga : STATE.rawData.margin_okipay;
       if (!raw || !raw.length) return;
 
-      const yFilter = document.getElementById('marginYearFilter').value;
-      const bFilter = document.getElementById('marginBranchFilter').value;
-      const cFilter = document.getElementById('marginCatFilter').value;
-      const oFilter = document.getElementById('marginOpFilter').value;
-      const q = document.getElementById('marginSearchInput').value.trim().toLowerCase();
+      const activeYears = STATE.selectedYears.margin || [];
+      const bFilter = document.getElementById('marginBranchFilter') ? document.getElementById('marginBranchFilter').value : '';
+      const cFilter = document.getElementById('marginCatFilter') ? document.getElementById('marginCatFilter').value : '';
+      const oFilter = document.getElementById('marginOpFilter') ? document.getElementById('marginOpFilter').value : '';
+      const q = document.getElementById('marginSearchInput') ? document.getElementById('marginSearchInput').value.trim().toLowerCase() : '';
 
       let filtered = raw.filter(r => {
         const y = String(getVal(r, 'TAHUN', 'Tahun'));
@@ -2214,7 +2229,7 @@
         const c = String(getVal(r, 'KATEGORI', 'Kategori'));
         const o = String(getVal(r, 'OPERATOR', 'Operator'));
         const p = String(getVal(r, 'PAKET', 'Paket'));
-        if (yFilter && y !== yFilter) return false;
+        if (activeYears.length > 0 && !activeYears.includes(y)) return false;
         if (bFilter && cb !== bFilter) return false;
         if (cFilter && c !== cFilter) return false;
         if (oFilter && o !== oFilter) return false;
@@ -2238,7 +2253,7 @@
       document.getElementById('m-rev-hpp').textContent = `${moneyShort(totalRev)} / ${moneyShort(totalHpp)}`;
       document.getElementById('m-profit-day').textContent = fmtRp(totalProfitDay);
 
-      // Months ordering
+      // Period Normalization & Chronological Ordering (from 2022 onwards)
       const ORDER = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const MONTH_MAP = {
         jan: 'Jan', january: 'Jan', januari: 'Jan',
@@ -2259,34 +2274,32 @@
         return MONTH_MAP[s] || String(val || '').trim();
       };
 
-      const rawMonths = [...new Set(filtered.map(r => normalizeMonth(getVal(r, 'MONTH', 'Bulan'))))].filter(Boolean);
-      const months = rawMonths.sort((a, b) => {
-        const ia = ORDER.indexOf(a);
-        const ib = ORDER.indexOf(b);
-        if (ia !== -1 && ib !== -1) return ia - ib;
-        if (ia !== -1) return -1;
-        if (ib !== -1) return 1;
-        return a.localeCompare(b);
-      });
-
-      // Aggregate data per month
-      const monthAgg = {};
-      months.forEach(m => {
-        monthAgg[m] = { hit: 0, rev: 0, hpp: 0, profit: 0 };
-      });
+      const periodMap = {};
       filtered.forEach(r => {
+        const y = String(getVal(r, 'TAHUN', 'Tahun') || '').trim();
         const m = normalizeMonth(getVal(r, 'MONTH', 'Bulan'));
-        if (monthAgg[m]) {
-          monthAgg[m].hit += parseNum(getVal(r, 'Total Hit'));
-          monthAgg[m].rev += parseNum(getVal(r, 'Total Revenue'));
-          monthAgg[m].hpp += parseNum(getVal(r, 'Total HPP'));
-          monthAgg[m].profit += parseNum(getVal(r, 'Gross Profit'));
+        if (!y || !m) return;
+        const key = `${y} ${m}`;
+        if (!periodMap[key]) {
+          periodMap[key] = { y: parseInt(y) || 0, m, hit: 0, rev: 0, hpp: 0, profit: 0 };
         }
+        periodMap[key].hit += parseNum(getVal(r, 'Total Hit'));
+        periodMap[key].rev += parseNum(getVal(r, 'Total Revenue'));
+        periodMap[key].hpp += parseNum(getVal(r, 'Total HPP'));
+        periodMap[key].profit += parseNum(getVal(r, 'Gross Profit'));
       });
 
-      const cuanTrxMonthData = months.map(m => monthAgg[m].hit > 0 ? Math.round((monthAgg[m].profit / monthAgg[m].hit) * 10) / 10 : 0);
-      const profitMonthData = months.map(m => monthAgg[m].profit);
-      const marginPctMonthData = months.map(m => monthAgg[m].rev > 0 ? Math.round((monthAgg[m].profit / monthAgg[m].rev * 100) * 100) / 100 : 0);
+      const sortedPeriods = Object.keys(periodMap).sort((a, b) => {
+        const pA = periodMap[a];
+        const pB = periodMap[b];
+        if (pA.y !== pB.y) return pA.y - pB.y;
+        return ORDER.indexOf(pA.m) - ORDER.indexOf(pB.m);
+      });
+
+      const chartLabels = sortedPeriods;
+      const cuanTrxMonthData = sortedPeriods.map(k => periodMap[k].hit > 0 ? Math.round((periodMap[k].profit / periodMap[k].hit) * 10) / 10 : 0);
+      const profitMonthData = sortedPeriods.map(k => periodMap[k].profit);
+      const marginPctMonthData = sortedPeriods.map(k => periodMap[k].rev > 0 ? Math.round((periodMap[k].profit / periodMap[k].rev * 100) * 100) / 100 : 0);
 
       const chartColorGrid = STATE.isDark ? '#334155' : '#e2e8f0';
       const chartColorText = STATE.isDark ? '#94a3b8' : '#64748b';
@@ -2296,7 +2309,7 @@
       renderChart('cuanTrxChart', {
         type: 'line',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Cuan / Trx (Rp)',
             data: cuanTrxMonthData,
@@ -2334,7 +2347,7 @@
       renderChart('profitMonthChart', {
         type: 'bar',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Gross Profit',
             data: profitMonthData,
@@ -2369,7 +2382,7 @@
       renderChart('marginPctChart', {
         type: 'line',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Margin %',
             data: marginPctMonthData,
@@ -2471,11 +2484,13 @@
     }
 
     function resetMarginFilters() {
-      document.getElementById('marginYearFilter').value = '';
-      document.getElementById('marginBranchFilter').value = '';
-      document.getElementById('marginCatFilter').value = '';
-      document.getElementById('marginOpFilter').value = '';
-      document.getElementById('marginSearchInput').value = '';
+      STATE.selectedYears.margin = [];
+      renderYearPills('margin');
+      if (document.getElementById('marginYearFilter')) document.getElementById('marginYearFilter').value = '';
+      if (document.getElementById('marginBranchFilter')) document.getElementById('marginBranchFilter').value = '';
+      if (document.getElementById('marginCatFilter')) document.getElementById('marginCatFilter').value = '';
+      if (document.getElementById('marginOpFilter')) document.getElementById('marginOpFilter').value = '';
+      if (document.getElementById('marginSearchInput')) document.getElementById('marginSearchInput').value = '';
       renderMargin();
     }
 
@@ -2630,6 +2645,7 @@
         fillSelect('prodOpFilter', [...new Set(prods.map(r => getVal(r, 'OPERATOR', 'Operator')))].sort());
       }
       if (margins) {
+        setupYearPills('margin', margins);
         fillSelect('marginYearFilter', [...new Set(margins.map(r => getVal(r, 'TAHUN', 'Tahun')))].sort().reverse());
         fillSelect('marginBranchFilter', [...new Set(margins.map(r => getVal(r, 'CABANG', 'Cabang', 'CHANNEL', 'Channel')))].sort());
         fillSelect('marginCatFilter', [...new Set(margins.map(r => getVal(r, 'KATEGORI', 'Kategori')))].sort());
@@ -2712,6 +2728,8 @@
         renderSales();
       } else if (tab === 'product') {
         renderProduct();
+      } else if (tab === 'margin') {
+        renderMargin();
       }
     }
 
