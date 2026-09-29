@@ -700,6 +700,10 @@
         <i class="fa-solid fa-cubes"></i>
         <span>Product Performance</span>
       </a>
+      <a class="nav-item" data-tab="margin" onclick="switchTab('margin')">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+        <span>Gross Margin & Cuan/Trx</span>
+      </a>
       <a class="nav-item" data-tab="agen" onclick="switchTab('agen')">
         <i class="fa-solid fa-users-line"></i>
         <span>Tren Transaksi Agen</span>
@@ -1037,6 +1041,147 @@
       </section>
 
       <!-- ============================================== -->
+      <!-- TAB: GROSS MARGIN & CUAN PER TRANSAKSI         -->
+      <!-- ============================================== -->
+      <section class="tab-view" id="view-margin">
+        <div class="filter-toolbar">
+          <div class="filter-group">
+            <span class="filter-label"><i class="fa-solid fa-filter"></i> Filter Margin:</span>
+            <select class="custom-select" id="marginYearFilter" onchange="renderMargin()"><option value="">Semua Tahun</option></select>
+            <select class="custom-select" id="marginBranchFilter" onchange="renderMargin()"><option value="">Semua Cabang</option></select>
+            <select class="custom-select" id="marginCatFilter" onchange="renderMargin()"><option value="">Semua Kategori</option></select>
+            <select class="custom-select" id="marginOpFilter" onchange="renderMargin()"><option value="">Semua Operator</option></select>
+            <input type="text" class="custom-input" id="marginSearchInput" placeholder="Cari paket / produk..." oninput="renderMargin()">
+          </div>
+          <div class="filter-group">
+            <button class="action-btn" onclick="resetMarginFilters()"><i class="fa-solid fa-rotate-left"></i> Reset Filter</button>
+          </div>
+        </div>
+
+        <!-- KPI Cards: Cuan per Trx Highlighted -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <!-- STAR HIGHLIGHT CARD: CUAN PER TRX -->
+          <div class="kpi-card" style="border: 2px solid var(--brand-primary); background: linear-gradient(135deg, var(--bg-card), rgba(2, 132, 199, 0.08));">
+            <div class="kpi-header">
+              <span class="kpi-label" style="color:var(--brand-primary); font-weight:800;">⭐ Cuan per Trx</span>
+              <div class="kpi-icon" style="background:var(--brand-gradient); color:#fff;"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            </div>
+            <div class="kpi-value" id="m-cuan-trx" style="color:var(--brand-primary); font-size:26px;">—</div>
+            <div class="kpi-subtext" id="m-cuan-hint">Rata-rata Margin per Hit/Trx</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Gross Margin (%)</span><div class="kpi-icon"><i class="fa-solid fa-percent"></i></div></div>
+            <div class="kpi-value" id="m-margin-pct">—</div>
+            <div class="kpi-subtext">Rasio Profit / Revenue</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Total Gross Profit</span><div class="kpi-icon"><i class="fa-solid fa-money-bill-wave"></i></div></div>
+            <div class="kpi-value" id="m-total-profit">—</div>
+            <div class="kpi-subtext">Akumulasi laba kotor (Jual - HPP)</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Total Revenue vs HPP</span><div class="kpi-icon"><i class="fa-solid fa-scale-balanced"></i></div></div>
+            <div class="kpi-value" id="m-rev-hpp" style="font-size:16px;">—</div>
+            <div class="kpi-subtext" id="m-rev-hpp-sub">Omzet Jual vs Modal Beli</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Profit / Day</span><div class="kpi-icon"><i class="fa-solid fa-calendar-day"></i></div></div>
+            <div class="kpi-value" id="m-profit-day">—</div>
+            <div class="kpi-subtext">Rata-rata Cuan Harian</div>
+          </div>
+        </div>
+
+        <!-- 4 Visual Analytics Charts -->
+        <div class="charts-grid-2">
+          <!-- 1. Tren Cuan per Trx -->
+          <div class="chart-panel" style="margin-bottom:0;">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-title"><i class="fa-solid fa-arrow-trend-up" style="color:#087eb9;"></i>Tren Cuan / Trx per Bulan</div>
+                <div class="chart-subtitle">Pergerakan rata-rata margin bersih per transaksi (Rp/Trx)</div>
+              </div>
+            </div>
+            <div class="chart-container-wrap">
+              <canvas id="cuanTrxChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 2. Tren Gross Profit (Rp) -->
+          <div class="chart-panel" style="margin-bottom:0;">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-title"><i class="fa-solid fa-coins" style="color:#138a5c;"></i>Tren Total Gross Profit (Rp)</div>
+                <div class="chart-subtitle">Akumulasi nominal laba kotor per bulan</div>
+              </div>
+            </div>
+            <div class="chart-container-wrap">
+              <canvas id="profitMonthChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 3. Tren Gross Margin % -->
+          <div class="chart-panel" style="margin-bottom:0;">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-title"><i class="fa-solid fa-chart-pie" style="color:#dd9317;"></i>Tren Gross Margin (%)</div>
+                <div class="chart-subtitle">Persentase margin laba per bulan</div>
+              </div>
+            </div>
+            <div class="chart-container-wrap">
+              <canvas id="marginPctChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 4. Profit by Cabang / Channel -->
+          <div class="chart-panel" style="margin-bottom:0;">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-title"><i class="fa-solid fa-network-wired" style="color:#6b5ddd;"></i>Gross Profit per Cabang / Channel</div>
+                <div class="chart-subtitle">Kontribusi nominal profit per cabang/channel</div>
+              </div>
+            </div>
+            <div class="chart-container-wrap">
+              <canvas id="profitBranchChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Margin Table -->
+        <div class="table-panel">
+          <div class="table-panel-header">
+            <div class="chart-title"><i class="fa-solid fa-table-list"></i>Detail Matriks Gross Margin & Cuan per Produk</div>
+            <div style="font-size:12px; color:var(--text-muted);" id="marginTableRowCount">0 varian</div>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table" id="marginTable">
+              <thead>
+                <tr>
+                  <th>Tahun</th>
+                  <th>Bulan</th>
+                  <th>Cabang</th>
+                  <th>Kategori</th>
+                  <th>Operator</th>
+                  <th>Paket</th>
+                  <th style="text-align:right">Total Hit</th>
+                  <th style="text-align:right">Total Revenue</th>
+                  <th style="text-align:right">Total HPP</th>
+                  <th style="text-align:right">Gross Profit</th>
+                  <th style="text-align:right">Margin %</th>
+                  <th style="text-align:right; color:var(--brand-primary); font-weight:800;">Cuan / Trx</th>
+                  <th style="text-align:right">Profit / Day</th>
+                </tr>
+              </thead>
+              <tbody id="marginTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
       <!-- TAB 4: TREN TRANSAKSI AGEN                     -->
       <!-- ============================================== -->
       <section class="tab-view" id="view-agen">
@@ -1117,6 +1262,13 @@
     const fmt = (n, d = 0) => new Intl.NumberFormat('id-ID', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n || 0);
     const fmtRp = (n) => 'Rp ' + fmt(n, 0);
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const moneyShort = (n) => {
+      n = n || 0;
+      if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(1) + ' M';
+      if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(1) + ' jt';
+      if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(1) + ' rb';
+      return Math.round(n).toLocaleString('id-ID');
+    };
 
     function parseNum(val) {
       if (val == null || val === '') return 0;
@@ -1153,7 +1305,7 @@
       }
 
       const hash = window.location.hash.replace('#', '');
-      if (['overview', 'sales', 'product', 'agen'].includes(hash)) {
+      if (['overview', 'sales', 'product', 'margin', 'agen'].includes(hash)) {
         STATE.currentTab = hash;
       }
 
@@ -1203,8 +1355,12 @@
         console.error('Error processing workbook:', err);
         dot.className = 'status-dot';
         dot.style.background = 'var(--danger)';
-        statusText.textContent = 'Format Excel Error';
-        if (alertBanner) alertBanner.style.display = 'flex';
+        statusText.textContent = 'Error: ' + err.message;
+        if (alertBanner) {
+          alertBanner.style.display = 'flex';
+          const span = alertBanner.querySelector('span') || alertBanner;
+          alertBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Error memuat data: ${esc(err.message)} <button class="action-btn" style="margin-left:auto;" onclick="document.getElementById('manualFileInput').click()"><i class="fa-solid fa-folder-open"></i> Pilih File Manual</button>`;
+        }
       }
     }
 
@@ -1217,6 +1373,8 @@
         sales_okipay: parseSheet(wb, 'Sales_Bulanan_OKI'),
         product_astaga: parseSheet(wb, 'Product_Bulanan_Astaga'),
         product_okipay: parseSheet(wb, 'Product_Bulanan_OKI'),
+        margin_astaga: parseSheet(wb, 'Margin_Bulanan_Astaga'),
+        margin_okipay: parseSheet(wb, 'Margin_Bulanan_OKI'),
         agen_astaga: parseSheet(wb, 'Agen_Astaga'),
         agen_okipay: parseSheet(wb, 'Agen_OkiPay')
       };
@@ -1226,6 +1384,8 @@
         sales_okipay: STATE.rawData.sales_okipay.length,
         product_astaga: STATE.rawData.product_astaga.length,
         product_okipay: STATE.rawData.product_okipay.length,
+        margin_astaga: STATE.rawData.margin_astaga.length,
+        margin_okipay: STATE.rawData.margin_okipay.length,
         agen_astaga: STATE.rawData.agen_astaga.length,
         agen_okipay: STATE.rawData.agen_okipay.length
       });
@@ -1320,6 +1480,7 @@
         overview: 'Executive Overview',
         sales: 'Sales & Distribution Analysis',
         product: 'Product Performance Matrix',
+        margin: 'Gross Margin & Cuan per Transaksi',
         agen: 'Tren Transaksi Agen & Downline'
       };
       document.getElementById('titleText').textContent = titles[tabId] || 'Dashboard';
@@ -1332,6 +1493,7 @@
         case 'overview': renderOverview(); break;
         case 'sales': renderSales(); break;
         case 'product': renderProduct(); break;
+        case 'margin': renderMargin(); break;
         case 'agen': renderAgen(); break;
       }
     }
@@ -1882,6 +2044,291 @@
     }
 
     // =========================================================================
+    // TAB: GROSS MARGIN & CUAN PER TRANSAKSI
+    // =========================================================================
+    function renderMargin() {
+      const isAstaga = STATE.brand === 'ASTAGA';
+      const raw = isAstaga ? STATE.rawData.margin_astaga : STATE.rawData.margin_okipay;
+      if (!raw || !raw.length) return;
+
+      const yFilter = document.getElementById('marginYearFilter').value;
+      const bFilter = document.getElementById('marginBranchFilter').value;
+      const cFilter = document.getElementById('marginCatFilter').value;
+      const oFilter = document.getElementById('marginOpFilter').value;
+      const q = document.getElementById('marginSearchInput').value.trim().toLowerCase();
+
+      let filtered = raw.filter(r => {
+        const y = String(getVal(r, 'TAHUN', 'Tahun'));
+        const cb = String(getVal(r, 'CABANG', 'Cabang', 'CHANNEL', 'Channel'));
+        const c = String(getVal(r, 'KATEGORI', 'Kategori'));
+        const o = String(getVal(r, 'OPERATOR', 'Operator'));
+        const p = String(getVal(r, 'PAKET', 'Paket'));
+        if (yFilter && y !== yFilter) return false;
+        if (bFilter && cb !== bFilter) return false;
+        if (cFilter && c !== cFilter) return false;
+        if (oFilter && o !== oFilter) return false;
+        if (q && !p.toLowerCase().includes(q) && !o.toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      const totalHit = filtered.reduce((a, b) => a + parseNum(getVal(b, 'Total Hit')), 0);
+      const totalRev = filtered.reduce((a, b) => a + parseNum(getVal(b, 'Total Revenue')), 0);
+      const totalHpp = filtered.reduce((a, b) => a + parseNum(getVal(b, 'Total HPP')), 0);
+      const totalProfit = filtered.reduce((a, b) => a + parseNum(getVal(b, 'Gross Profit')), 0);
+      const totalProfitDay = filtered.reduce((a, b) => a + parseNum(getVal(b, 'Margin / Day')), 0);
+      
+      const cuanTrx = totalHit > 0 ? (totalProfit / totalHit) : 0;
+      const marginPct = totalRev > 0 ? ((totalProfit / totalRev) * 100) : 0;
+
+      // KPI Cards
+      document.getElementById('m-cuan-trx').textContent = fmtRp(cuanTrx) + ' / Trx';
+      document.getElementById('m-margin-pct').textContent = fmt(marginPct, 2) + '%';
+      document.getElementById('m-total-profit').textContent = fmtRp(totalProfit);
+      document.getElementById('m-rev-hpp').textContent = `${moneyShort(totalRev)} / ${moneyShort(totalHpp)}`;
+      document.getElementById('m-profit-day').textContent = fmtRp(totalProfitDay);
+
+      // Months ordering
+      const ORDER = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const MONTH_MAP = {
+        jan: 'Jan', january: 'Jan', januari: 'Jan',
+        feb: 'Feb', february: 'Feb', februari: 'Feb',
+        mar: 'Mar', march: 'Mar', maret: 'Mar',
+        apr: 'Apr', april: 'Apr',
+        may: 'May', mei: 'May',
+        jun: 'Jun', june: 'Jun', juni: 'Jun',
+        jul: 'Jul', july: 'Jul', juli: 'Jul',
+        aug: 'Aug', agustus: 'Aug',
+        sep: 'Sep', september: 'Sep',
+        oct: 'Oct', oktober: 'Oct',
+        nov: 'Nov', november: 'Nov',
+        dec: 'Dec', desember: 'Dec'
+      };
+      const normalizeMonth = val => {
+        const s = String(val || '').trim().toLowerCase();
+        return MONTH_MAP[s] || String(val || '').trim();
+      };
+
+      const rawMonths = [...new Set(filtered.map(r => normalizeMonth(getVal(r, 'MONTH', 'Bulan'))))].filter(Boolean);
+      const months = rawMonths.sort((a, b) => {
+        const ia = ORDER.indexOf(a);
+        const ib = ORDER.indexOf(b);
+        if (ia !== -1 && ib !== -1) return ia - ib;
+        if (ia !== -1) return -1;
+        if (ib !== -1) return 1;
+        return a.localeCompare(b);
+      });
+
+      // Aggregate data per month
+      const monthAgg = {};
+      months.forEach(m => {
+        monthAgg[m] = { hit: 0, rev: 0, hpp: 0, profit: 0 };
+      });
+      filtered.forEach(r => {
+        const m = normalizeMonth(getVal(r, 'MONTH', 'Bulan'));
+        if (monthAgg[m]) {
+          monthAgg[m].hit += parseNum(getVal(r, 'Total Hit'));
+          monthAgg[m].rev += parseNum(getVal(r, 'Total Revenue'));
+          monthAgg[m].hpp += parseNum(getVal(r, 'Total HPP'));
+          monthAgg[m].profit += parseNum(getVal(r, 'Gross Profit'));
+        }
+      });
+
+      const cuanTrxMonthData = months.map(m => monthAgg[m].hit > 0 ? Math.round((monthAgg[m].profit / monthAgg[m].hit) * 10) / 10 : 0);
+      const profitMonthData = months.map(m => monthAgg[m].profit);
+      const marginPctMonthData = months.map(m => monthAgg[m].rev > 0 ? Math.round((monthAgg[m].profit / monthAgg[m].rev * 100) * 100) / 100 : 0);
+
+      const chartColorGrid = STATE.isDark ? '#334155' : '#e2e8f0';
+      const chartColorText = STATE.isDark ? '#94a3b8' : '#64748b';
+      const labelColor = STATE.isDark ? '#cbd5e1' : '#475569';
+
+      // 1. cuanTrxChart (Line Chart, Blue #087eb9)
+      renderChart('cuanTrxChart', {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Cuan / Trx (Rp)',
+            data: cuanTrxMonthData,
+            borderColor: '#087eb9',
+            backgroundColor: 'rgba(8, 126, 185, 0.12)',
+            borderWidth: 3,
+            pointBackgroundColor: '#087eb9',
+            pointRadius: 5,
+            fill: true,
+            tension: 0.35
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 22 } },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'top',
+              align: 'top',
+              color: labelColor,
+              font: { size: 10, weight: '700' },
+              formatter: v => v > 0 ? 'Rp ' + fmt(v, 1) : ''
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: chartColorText } },
+            y: { grid: { color: chartColorGrid }, ticks: { color: chartColorText, callback: v => 'Rp ' + fmt(v, 0) }, beginAtZero: false }
+          }
+        }
+      });
+
+      // 2. profitMonthChart (Bar Chart, Green #138a5c)
+      renderChart('profitMonthChart', {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Gross Profit',
+            data: profitMonthData,
+            backgroundColor: '#138a5ccc',
+            borderColor: '#138a5c',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 22 } },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              color: labelColor,
+              font: { size: 10, weight: '700' },
+              formatter: v => v > 0 ? moneyShort(v) : ''
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: chartColorText } },
+            y: { grid: { color: chartColorGrid }, ticks: { color: chartColorText, callback: v => moneyShort(v) }, beginAtZero: true }
+          }
+        }
+      });
+
+      // 3. marginPctChart (Line Chart, Amber #dd9317)
+      renderChart('marginPctChart', {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Margin %',
+            data: marginPctMonthData,
+            borderColor: '#dd9317',
+            backgroundColor: 'rgba(221, 147, 23, 0.12)',
+            borderWidth: 3,
+            pointBackgroundColor: '#dd9317',
+            pointRadius: 5,
+            fill: true,
+            tension: 0.35
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 22 } },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'top',
+              align: 'top',
+              color: labelColor,
+              font: { size: 10, weight: '700' },
+              formatter: v => v > 0 ? fmt(v, 2) + '%' : ''
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: chartColorText } },
+            y: { grid: { color: chartColorGrid }, ticks: { color: chartColorText, callback: v => fmt(v, 1) + '%' }, beginAtZero: true }
+          }
+        }
+      });
+
+      // 4. profitBranchChart (Horizontal Bar or Bar by Branch)
+      const branchMap = {};
+      filtered.forEach(r => {
+        const b = getVal(r, 'CABANG', 'Cabang', 'CHANNEL', 'Channel') || '(blank)';
+        if (!branchMap[b]) branchMap[b] = 0;
+        branchMap[b] += parseNum(getVal(r, 'Gross Profit'));
+      });
+      const branchLabels = Object.keys(branchMap);
+      const branchData = branchLabels.map(k => branchMap[k]);
+
+      renderChart('profitBranchChart', {
+        type: 'bar',
+        data: {
+          labels: branchLabels,
+          datasets: [{
+            label: 'Profit Cabang',
+            data: branchData,
+            backgroundColor: '#6b5dddcc',
+            borderColor: '#6b5ddd',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 22 } },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              color: labelColor,
+              font: { size: 10, weight: '700' },
+              formatter: v => v > 0 ? moneyShort(v) : ''
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: chartColorText } },
+            y: { grid: { color: chartColorGrid }, ticks: { color: chartColorText, callback: v => moneyShort(v) }, beginAtZero: true }
+          }
+        }
+      });
+
+      // Margin Table: sorted by Cuan / Trx descending by default
+      document.getElementById('marginTableRowCount').textContent = `${filtered.length} varian`;
+      const tableRows = [...filtered].sort((a,b) => parseNum(getVal(b, 'Margin / Trx')) - parseNum(getVal(a, 'Margin / Trx')));
+      const body = document.getElementById('marginTableBody');
+      body.innerHTML = tableRows.slice(0, 150).map(r => `
+        <tr>
+          <td>${esc(getVal(r, 'TAHUN', 'Tahun'))}</td>
+          <td><b>${esc(getVal(r, 'MONTH', 'Bulan'))}</b></td>
+          <td><span class="yoy-badge flat">${esc(getVal(r, 'CABANG', 'Cabang', 'CHANNEL', 'Channel'))}</span></td>
+          <td><span class="yoy-badge flat">${esc(getVal(r, 'KATEGORI', 'Kategori'))}</span></td>
+          <td style="font-weight:700;">${esc(getVal(r, 'OPERATOR', 'Operator'))}</td>
+          <td>${esc(getVal(r, 'PAKET', 'Paket'))}</td>
+          <td style="text-align:right; font-weight:700;">${fmt(parseNum(getVal(r, 'Total Hit')), 0)}</td>
+          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Total Revenue')))}</td>
+          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Total HPP')))}</td>
+          <td style="text-align:right; font-weight:700; color:var(--success);">${fmtRp(parseNum(getVal(r, 'Gross Profit')))}</td>
+          <td style="text-align:right;">${fmt(parseNum(getVal(r, 'Gross Margin %')), 2)}%</td>
+          <td style="text-align:right; font-weight:800; color:var(--brand-primary);">${fmtRp(parseNum(getVal(r, 'Margin / Trx')))}</td>
+          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Margin / Day')))}</td>
+        </tr>
+      `).join('');
+    }
+
+    function resetMarginFilters() {
+      document.getElementById('marginYearFilter').value = '';
+      document.getElementById('marginBranchFilter').value = '';
+      document.getElementById('marginCatFilter').value = '';
+      document.getElementById('marginOpFilter').value = '';
+      document.getElementById('marginSearchInput').value = '';
+      renderMargin();
+    }
+
+    // =========================================================================
     // TAB 4: TREN TRANSAKSI AGEN (HEATMAP MATRIX)
     // =========================================================================
     function renderAgen() {
@@ -2019,6 +2466,7 @@
       const isAstaga = STATE.brand === 'ASTAGA';
       const sales = isAstaga ? STATE.rawData.sales_astaga : STATE.rawData.sales_okipay;
       const prods = isAstaga ? STATE.rawData.product_astaga : STATE.rawData.product_okipay;
+      const margins = isAstaga ? STATE.rawData.margin_astaga : STATE.rawData.margin_okipay;
       const agens = isAstaga ? STATE.rawData.agen_astaga : STATE.rawData.agen_okipay;
 
       if (sales) {
@@ -2029,6 +2477,12 @@
         fillSelect('prodYearFilter', [...new Set(prods.map(r => getVal(r, 'TAHUN', 'Tahun')))].sort().reverse());
         fillSelect('prodCatFilter', [...new Set(prods.map(r => getVal(r, 'KATEGORI', 'Kategori')))].sort());
         fillSelect('prodOpFilter', [...new Set(prods.map(r => getVal(r, 'OPERATOR', 'Operator')))].sort());
+      }
+      if (margins) {
+        fillSelect('marginYearFilter', [...new Set(margins.map(r => getVal(r, 'TAHUN', 'Tahun')))].sort().reverse());
+        fillSelect('marginBranchFilter', [...new Set(margins.map(r => getVal(r, 'CABANG', 'Cabang', 'CHANNEL', 'Channel')))].sort());
+        fillSelect('marginCatFilter', [...new Set(margins.map(r => getVal(r, 'KATEGORI', 'Kategori')))].sort());
+        fillSelect('marginOpFilter', [...new Set(margins.map(r => getVal(r, 'OPERATOR', 'Operator')))].sort());
       }
       if (agens) {
         fillSelect('agenBranchFilter', [...new Set(agens.map(r => getVal(r, 'CABANG', 'Cabang')))].sort());
@@ -2075,6 +2529,7 @@
       switch (STATE.currentTab) {
         case 'sales': tableId = 'salesDetailTable'; break;
         case 'product': tableId = 'productTable'; break;
+        case 'margin': tableId = 'marginTable'; break;
         case 'agen': tableId = 'agenMatrixTable'; break;
         default: tableId = 'ov-top-agen-table'; break;
       }
