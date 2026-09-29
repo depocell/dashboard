@@ -357,6 +357,77 @@
       flex: 1;
     }
 
+    /* Year Pills Multiselect Bar */
+    .year-pills-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .year-pills-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      margin-right: 4px;
+    }
+    .year-pills-title i {
+      color: var(--brand-primary);
+    }
+    .year-pills-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .year-pill {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .year-pill:hover {
+      border-color: var(--brand-primary);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+    .year-pill.active {
+      background: var(--brand-gradient);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 3px 10px var(--brand-glow);
+    }
+    .year-pill.all.active {
+      background: linear-gradient(135deg, #334155, #1e293b);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    }
+    body.dark-theme .year-pill.all.active {
+      background: linear-gradient(135deg, #475569, #334155);
+      color: #ffffff;
+    }
+
     /* Filter Toolbar */
     .filter-toolbar {
       background: var(--bg-card);
@@ -639,6 +710,22 @@
       justify-content: space-between;
     }
 
+    /* Mobile Backdrop & Responsive */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 95;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .sidebar-backdrop.show {
+      display: block;
+      opacity: 1;
+    }
+
     @media (max-width: 992px) {
       .app-sidebar { transform: translateX(-100%); }
       .app-sidebar.show { transform: translateX(0); }
@@ -646,12 +733,24 @@
       .toggle-sidebar-btn { display: block; }
     }
     @media (max-width: 640px) {
-      .app-content { padding: 14px 14px 36px; }
-      .app-topbar { padding: 0 16px; }
-      .kpi-grid { grid-template-columns: 1fr; }
+      .app-content { padding: 14px 12px 36px; }
+      .app-topbar { padding: 0 14px; height: 60px; }
+      .page-title-box h1 { font-size: 15px; }
+      .brand-tag-chip { display: none; }
+      .topbar-right { gap: 6px; }
+      .action-btn { padding: 0 10px; height: 34px; font-size: 11px; }
+      .action-btn span { display: none; }
+      .kpi-grid { grid-template-columns: 1fr; gap: 12px; }
+      .year-pills-bar { padding: 10px 14px; gap: 8px; }
+      .year-pill { padding: 5px 11px; font-size: 11px; }
+      .filter-toolbar { padding: 12px; gap: 10px; }
+      .filter-group { width: 100%; }
+      .custom-select, .custom-input { width: 100%; min-width: unset; }
+      .table-panel { padding: 14px; }
+      .table-wrapper { -webkit-overflow-scrolling: touch; }
     }
     @media print {
-      .app-sidebar, .app-topbar, .filter-toolbar, .action-btn { display: none !important; }
+      .app-sidebar, .app-topbar, .filter-toolbar, .action-btn, .sidebar-backdrop { display: none !important; }
       .app-main { margin-left: 0 !important; }
       .chart-container-wrap { height: 260px !important; }
       body { background: #fff !important; color: #000 !important; }
@@ -729,6 +828,7 @@
       </div>
     </div>
   </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
   <!-- Main View -->
   <main class="app-main">
@@ -744,9 +844,9 @@
         </div>
       </div>
       <div class="topbar-right">
-        <button class="action-btn" onclick="refreshData()" title="Reload data dari Excel"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
-        <button class="action-btn" onclick="exportActiveTable()" title="Export tabel aktif ke Excel/CSV"><i class="fa-solid fa-file-excel"></i> Export</button>
-        <button class="action-btn" onclick="window.print()" title="Cetak atau simpan PDF"><i class="fa-solid fa-print"></i> PDF</button>
+        <button class="action-btn" onclick="refreshData()" title="Reload data dari Excel"><i class="fa-solid fa-arrows-rotate"></i> <span>Refresh</span></button>
+        <button class="action-btn" onclick="exportActiveTable()" title="Export tabel aktif ke Excel/CSV"><i class="fa-solid fa-file-excel"></i> <span>Export</span></button>
+        <button class="action-btn" onclick="window.print()" title="Cetak atau simpan PDF"><i class="fa-solid fa-print"></i> <span>PDF</span></button>
         <button class="action-btn" onclick="toggleTheme()" id="btnThemeToggle" title="Ganti Tema Dark/Light"><i class="fa-solid fa-moon"></i></button>
       </div>
     </header>
@@ -832,10 +932,24 @@
       <!-- TAB 2: SALES & DISTRIBUTION                    -->
       <!-- ============================================== -->
       <section class="tab-view" id="view-sales">
+        <!-- Year Pills Multiselect (Di bawah header) -->
+        <div class="year-pills-bar">
+          <div class="year-pills-title"><i class="fa-solid fa-calendar-check"></i> Filter Tahun:</div>
+          <div class="year-pills-list" id="salesYearPills">
+            <button type="button" class="year-pill all active" onclick="toggleYearPill('sales', 'ALL')">
+              <i class="fa-solid fa-layer-group"></i> Semua Tahun
+            </button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('sales', '2022')">2022</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('sales', '2023')">2023</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('sales', '2024')">2024</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('sales', '2025')">2025</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('sales', '2026')">2026</button>
+          </div>
+        </div>
+
         <div class="filter-toolbar">
           <div class="filter-group">
-            <span class="filter-label"><i class="fa-solid fa-filter"></i> Filter Sales:</span>
-            <select class="custom-select" id="salesYearFilter" onchange="renderSales()"><option value="">Semua Tahun</option></select>
+            <span class="filter-label"><i class="fa-solid fa-filter"></i> Filter Cabang:</span>
             <select class="custom-select" id="salesBranchFilter" onchange="renderSales()"><option value="">Semua Cabang / Channel</option></select>
           </div>
           <div class="filter-group">
@@ -905,10 +1019,24 @@
       <!-- TAB 3: PRODUCT PERFORMANCE                     -->
       <!-- ============================================== -->
       <section class="tab-view" id="view-product">
+        <!-- Year Pills Multiselect (Di bawah header) -->
+        <div class="year-pills-bar">
+          <div class="year-pills-title"><i class="fa-solid fa-calendar-check"></i> Filter Tahun:</div>
+          <div class="year-pills-list" id="productYearPills">
+            <button type="button" class="year-pill all active" onclick="toggleYearPill('product', 'ALL')">
+              <i class="fa-solid fa-layer-group"></i> Semua Tahun
+            </button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('product', '2022')">2022</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('product', '2023')">2023</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('product', '2024')">2024</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('product', '2025')">2025</button>
+            <button type="button" class="year-pill" onclick="toggleYearPill('product', '2026')">2026</button>
+          </div>
+        </div>
+
         <div class="filter-toolbar">
           <div class="filter-group">
             <span class="filter-label"><i class="fa-solid fa-filter"></i> Filter Produk:</span>
-            <select class="custom-select" id="prodYearFilter" onchange="renderProduct()"><option value="">Semua Tahun</option></select>
             <select class="custom-select" id="prodCatFilter" onchange="renderProduct()"><option value="">Semua Kategori</option></select>
             <select class="custom-select" id="prodOpFilter" onchange="renderProduct()"><option value="">Semua Operator</option></select>
             <input type="text" class="custom-input" id="prodSearchInput" placeholder="Cari nama paket..." oninput="renderProduct()">
@@ -947,69 +1075,69 @@
           </div>
         </div>
 
-        <!-- 2 CHARTS: Tren Hit per Month & Tren Revenue per Month -->
-        <div class="charts-grid-2">
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-bullseye" style="color:#06bbcf;"></i>Tren Hit per Month</div>
-                <div class="chart-subtitle">Total Succes Hit per bulan</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="hitMonthChart"></canvas>
+        <!-- 5 CHARTS (Vertical Stacked One-by-One, Full-Width) -->
+        <!-- 1. Tren Hit per Month -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-bullseye" style="color:#06bbcf;"></i>Tren Hit per Month</div>
+              <div class="chart-subtitle">Total Succes Hit per bulan</div>
             </div>
           </div>
-
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-wallet" style="color:#dd9317;"></i>Tren Revenue per Month</div>
-                <div class="chart-subtitle">Total Revenue per bulan</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="revMonthChart"></canvas>
-            </div>
+          <div class="chart-container-wrap">
+            <canvas id="hitMonthChart"></canvas>
           </div>
         </div>
 
-        <!-- 3 CHARTS: Tren Hit / Day, Tren Rev / Day, Tren Rev / Hit -->
-        <div class="charts-grid-3">
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-chart-line" style="color:#087eb9;"></i>Tren Hit / Day</div>
-                <div class="chart-subtitle">Daily Trx setiap bulannya</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="hitChart"></canvas>
+        <!-- 2. Tren Revenue per Month -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-wallet" style="color:#dd9317;"></i>Tren Revenue per Month</div>
+              <div class="chart-subtitle">Total Revenue per bulan</div>
             </div>
           </div>
+          <div class="chart-container-wrap">
+            <canvas id="revMonthChart"></canvas>
+          </div>
+        </div>
 
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-money-bill-trend-up" style="color:#138a5c;"></i>Tren Rev / Day</div>
-                <div class="chart-subtitle">Daily Revenue setiap bulannya</div>
-              </div>
-            </div>
-            <div class="chart-container-wrap">
-              <canvas id="revDayChart"></canvas>
+        <!-- 3. Tren Hit / Day -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-chart-line" style="color:#087eb9;"></i>Tren Hit / Day</div>
+              <div class="chart-subtitle">Daily Trx setiap bulannya</div>
             </div>
           </div>
+          <div class="chart-container-wrap">
+            <canvas id="hitChart"></canvas>
+          </div>
+        </div>
 
-          <div class="chart-panel" style="margin-bottom:0;">
-            <div class="chart-panel-header">
-              <div>
-                <div class="chart-title"><i class="fa-solid fa-coins" style="color:#6b5ddd;"></i>Tren Rev / Hit (ARPU)</div>
-                <div class="chart-subtitle">Rata-rata revenue per hit menurut bulan</div>
-              </div>
+        <!-- 4. Tren Rev / Day -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-money-bill-trend-up" style="color:#138a5c;"></i>Tren Rev / Day</div>
+              <div class="chart-subtitle">Daily Revenue setiap bulannya</div>
             </div>
-            <div class="chart-container-wrap">
-              <canvas id="revHitChart"></canvas>
+          </div>
+          <div class="chart-container-wrap">
+            <canvas id="revDayChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 5. Tren Rev / Hit (ARPU) -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-coins" style="color:#6b5ddd;"></i>Tren Rev / Hit (ARPU)</div>
+              <div class="chart-subtitle">Rata-rata revenue per hit menurut bulan</div>
             </div>
+          </div>
+          <div class="chart-container-wrap">
+            <canvas id="revHitChart"></canvas>
           </div>
         </div>
 
@@ -1253,7 +1381,15 @@
       ],
       rawData: {}, // holds parsed sheets
       charts: {},
-      isDark: false
+      isDark: false,
+      selectedYears: {
+        sales: [], // empty = all years
+        product: [] // empty = all years
+      },
+      availableYears: {
+        sales: [],
+        product: []
+      }
     };
 
     const MONTH_ORDER = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1457,8 +1593,16 @@
       renderActiveView();
     }
 
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('show');
+    function toggleSidebar(forceClose = false) {
+      const sb = document.getElementById('sidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (forceClose) {
+        sb.classList.remove('show');
+        bd.classList.remove('show');
+      } else {
+        const isShow = sb.classList.toggle('show');
+        bd.classList.toggle('show', isShow);
+      }
     }
 
     // =========================================================================
@@ -1467,6 +1611,11 @@
     function switchTab(tabId) {
       STATE.currentTab = tabId;
       window.location.hash = tabId;
+
+      // Auto close mobile drawer on navigation
+      if (window.innerWidth <= 992) {
+        toggleSidebar(true);
+      }
 
       document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.toggle('active', item.dataset.tab === tabId);
@@ -1613,13 +1762,13 @@
       const raw = isAstaga ? STATE.rawData.sales_astaga : STATE.rawData.sales_okipay;
       if (!raw || !raw.length) return;
 
-      const yFilter = document.getElementById('salesYearFilter').value;
-      const bFilter = document.getElementById('salesBranchFilter').value;
+      const activeYears = STATE.selectedYears.sales || [];
+      const bFilter = document.getElementById('salesBranchFilter') ? document.getElementById('salesBranchFilter').value : '';
 
       let filtered = raw.filter(r => {
         const y = String(getVal(r, 'Tahun', 'TAHUN'));
         const b = String(getVal(r, 'Cabang', 'CABANG'));
-        if (yFilter && y !== yFilter) return false;
+        if (activeYears.length > 0 && !activeYears.includes(y)) return false;
         if (bFilter && b !== bFilter) return false;
         return true;
       });
@@ -1742,8 +1891,11 @@
     }
 
     function resetSalesFilters() {
-      document.getElementById('salesYearFilter').value = '';
-      document.getElementById('salesBranchFilter').value = '';
+      STATE.selectedYears.sales = [];
+      renderYearPills('sales');
+      if (document.getElementById('salesBranchFilter')) {
+        document.getElementById('salesBranchFilter').value = '';
+      }
       renderSales();
     }
 
@@ -1755,17 +1907,17 @@
       const raw = isAstaga ? STATE.rawData.product_astaga : STATE.rawData.product_okipay;
       if (!raw || !raw.length) return;
 
-      const yFilter = document.getElementById('prodYearFilter').value;
-      const cFilter = document.getElementById('prodCatFilter').value;
-      const oFilter = document.getElementById('prodOpFilter').value;
-      const q = document.getElementById('prodSearchInput').value.trim().toLowerCase();
+      const activeYears = STATE.selectedYears.product || [];
+      const cFilter = document.getElementById('prodCatFilter') ? document.getElementById('prodCatFilter').value : '';
+      const oFilter = document.getElementById('prodOpFilter') ? document.getElementById('prodOpFilter').value : '';
+      const q = document.getElementById('prodSearchInput') ? document.getElementById('prodSearchInput').value.trim().toLowerCase() : '';
 
       let filtered = raw.filter(r => {
         const y = String(getVal(r, 'TAHUN', 'Tahun'));
         const c = String(getVal(r, 'KATEGORI', 'Kategori'));
         const o = String(getVal(r, 'OPERATOR', 'Operator'));
         const p = String(getVal(r, 'PAKET', 'Paket'));
-        if (yFilter && y !== yFilter) return false;
+        if (activeYears.length > 0 && !activeYears.includes(y)) return false;
         if (cFilter && c !== cFilter) return false;
         if (oFilter && o !== oFilter) return false;
         if (q && !p.toLowerCase().includes(q)) return false;
@@ -1784,7 +1936,7 @@
       document.getElementById('p-rev-day').textContent = fmtRp(totalRevDay);
       document.getElementById('p-rev-hit').textContent = fmtRp(revHit);
 
-      // Month Normalization & Ordering (Old Model)
+      // Period Normalization & Chronological Ordering (from 2022 onwards, like Sales tab)
       const ORDER = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const MONTH_MAP = {
         jan: 'Jan', january: 'Jan', januari: 'Jan',
@@ -1806,36 +1958,34 @@
         return MONTH_MAP[s] || String(val || '').trim();
       };
 
-      const rawMonths = [...new Set(filtered.map(r => normalizeMonth(getVal(r, 'MONTH', 'Bulan'))))].filter(Boolean);
-      const months = rawMonths.sort((a, b) => {
-        const ia = ORDER.indexOf(a);
-        const ib = ORDER.indexOf(b);
-        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+      const periodMap = {};
+      filtered.forEach(r => {
+        const y = String(getVal(r, 'TAHUN', 'Tahun') || '').trim();
+        const m = normalizeMonth(getVal(r, 'MONTH', 'Bulan'));
+        if (!y || !m) return;
+        const key = `${y} ${m}`;
+        if (!periodMap[key]) {
+          periodMap[key] = { y: parseInt(y) || 0, m, hit: 0, rev: 0, hitDay: 0, revDay: 0 };
+        }
+        periodMap[key].hit += parseNum(getVal(r, 'Total Hit'));
+        periodMap[key].rev += parseNum(getVal(r, 'Total Revenue'));
+        periodMap[key].hitDay += parseNum(getVal(r, 'Hit / Day'));
+        periodMap[key].revDay += parseNum(getVal(r, 'Rev / Day'));
       });
 
-      const byMonthSum = colName => months.map(m => {
-        const matching = filtered.filter(r => normalizeMonth(getVal(r, 'MONTH', 'Bulan')) === m);
-        return matching.reduce((s, r) => s + parseNum(getVal(r, colName)), 0);
+      const sortedPeriods = Object.keys(periodMap).sort((a, b) => {
+        const pA = periodMap[a];
+        const pB = periodMap[b];
+        if (pA.y !== pB.y) return pA.y - pB.y;
+        return ORDER.indexOf(pA.m) - ORDER.indexOf(pB.m);
       });
 
-      const byMonthAvg = colName => months.map(m => {
-        const matching = filtered.filter(r => normalizeMonth(getVal(r, 'MONTH', 'Bulan')) === m);
-        return matching.length ? matching.reduce((s, r) => s + parseNum(getVal(r, colName)), 0) / matching.length : 0;
-      });
-
-      const moneyShort = n => {
-        n = n || 0;
-        if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(1) + ' M';
-        if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(1) + ' jt';
-        if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(1) + ' rb';
-        return Math.round(n).toLocaleString('id-ID');
-      };
-
-      const hitMonthData = byMonthSum('Total Hit');
-      const revMonthData = byMonthSum('Total Revenue');
-      const hitDayData = byMonthSum('Hit / Day');
-      const revDayData = byMonthSum('Rev / Day');
-      const revHitData = byMonthAvg('Rev / Hit');
+      const chartLabels = sortedPeriods;
+      const hitMonthData = sortedPeriods.map(k => periodMap[k].hit);
+      const revMonthData = sortedPeriods.map(k => periodMap[k].rev);
+      const hitDayData = sortedPeriods.map(k => periodMap[k].hitDay);
+      const revDayData = sortedPeriods.map(k => periodMap[k].revDay);
+      const revHitData = sortedPeriods.map(k => periodMap[k].hit > 0 ? Math.round(periodMap[k].rev / periodMap[k].hit) : 0);
 
       const chartColorGrid = STATE.isDark ? '#1e293b' : '#f1f5f9';
       const chartColorText = STATE.isDark ? '#94a3b8' : '#64748b';
@@ -1845,7 +1995,7 @@
       renderChart('hitMonthChart', {
         type: 'bar',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Total Hit',
             data: hitMonthData,
@@ -1866,12 +2016,12 @@
               align: 'top',
               color: labelColor,
               font: { size: 10, weight: '700' },
-              formatter: v => v > 0 ? fmt(v, 0) : ''
+              formatter: v => v > 0 ? moneyShort(v) : ''
             }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: chartColorText } },
-            y: { grid: { color: chartColorGrid }, ticks: { color: chartColorText, callback: v => fmt(v, 0) }, beginAtZero: true }
+            y: { grid: { color: chartColorGrid }, ticks: { color: chartColorText, callback: v => moneyShort(v) }, beginAtZero: true }
           }
         }
       });
@@ -1880,7 +2030,7 @@
       renderChart('revMonthChart', {
         type: 'bar',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Total Revenue',
             data: revMonthData,
@@ -1915,7 +2065,7 @@
       renderChart('hitChart', {
         type: 'bar',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Hit / Day',
             data: hitDayData,
@@ -1950,7 +2100,7 @@
       renderChart('revDayChart', {
         type: 'bar',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Rev / Day',
             data: revDayData,
@@ -1985,7 +2135,7 @@
       renderChart('revHitChart', {
         type: 'bar',
         data: {
-          labels: months,
+          labels: chartLabels,
           datasets: [{
             label: 'Rev / Hit',
             data: revHitData,
@@ -2036,10 +2186,11 @@
     }
 
     function resetProductFilters() {
-      document.getElementById('prodYearFilter').value = '';
-      document.getElementById('prodCatFilter').value = '';
-      document.getElementById('prodOpFilter').value = '';
-      document.getElementById('prodSearchInput').value = '';
+      STATE.selectedYears.product = [];
+      renderYearPills('product');
+      if (document.getElementById('prodCatFilter')) document.getElementById('prodCatFilter').value = '';
+      if (document.getElementById('prodOpFilter')) document.getElementById('prodOpFilter').value = '';
+      if (document.getElementById('prodSearchInput')) document.getElementById('prodSearchInput').value = '';
       renderProduct();
     }
 
@@ -2470,11 +2621,11 @@
       const agens = isAstaga ? STATE.rawData.agen_astaga : STATE.rawData.agen_okipay;
 
       if (sales) {
-        fillSelect('salesYearFilter', [...new Set(sales.map(r => getVal(r, 'Tahun', 'TAHUN')))].sort().reverse());
+        setupYearPills('sales', sales);
         fillSelect('salesBranchFilter', [...new Set(sales.map(r => getVal(r, 'Cabang', 'CABANG')))].sort());
       }
       if (prods) {
-        fillSelect('prodYearFilter', [...new Set(prods.map(r => getVal(r, 'TAHUN', 'Tahun')))].sort().reverse());
+        setupYearPills('product', prods);
         fillSelect('prodCatFilter', [...new Set(prods.map(r => getVal(r, 'KATEGORI', 'Kategori')))].sort());
         fillSelect('prodOpFilter', [...new Set(prods.map(r => getVal(r, 'OPERATOR', 'Operator')))].sort());
       }
@@ -2486,6 +2637,81 @@
       }
       if (agens) {
         fillSelect('agenBranchFilter', [...new Set(agens.map(r => getVal(r, 'CABANG', 'Cabang')))].sort());
+      }
+    }
+
+    // =========================================================================
+    // YEAR PILLS MULTISELECT HANDLER
+    // =========================================================================
+    function setupYearPills(tab, raw) {
+      if (!raw || !raw.length) return;
+      const years = [...new Set(raw.map(r => String(getVal(r, 'Tahun', 'TAHUN') || '').trim()))]
+        .filter(y => y && !isNaN(y))
+        .sort((a, b) => parseInt(a) - parseInt(b));
+      
+      STATE.availableYears[tab] = years;
+      renderYearPills(tab);
+    }
+
+    function renderYearPills(tab) {
+      const container = document.getElementById(`${tab}YearPills`) || document.getElementById('prodYearPills');
+      if (!container) return;
+
+      let years = STATE.availableYears[tab] || [];
+      if (!years.length) {
+        years = ['2022', '2023', '2024', '2025', '2026'];
+        STATE.availableYears[tab] = years;
+      }
+      const selected = STATE.selectedYears[tab] || [];
+      const isAll = selected.length === 0 || selected.length === years.length;
+
+      let html = `<button type="button" class="year-pill all ${isAll ? 'active' : ''}" onclick="toggleYearPill('${tab}', 'ALL')">
+        <i class="fa-solid fa-layer-group"></i> Semua Tahun ${isAll ? '<i class="fa-solid fa-check" style="font-size:10px; margin-left:2px;"></i>' : ''}
+      </button>`;
+
+      years.forEach(y => {
+        const isActive = isAll ? false : selected.includes(y);
+        html += `<button type="button" class="year-pill ${isActive ? 'active' : ''}" onclick="toggleYearPill('${tab}', '${y}')">
+          ${isActive ? '<i class="fa-solid fa-check" style="font-size:10px;"></i> ' : ''}${y}
+        </button>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function toggleYearPill(tab, year) {
+      if (!STATE.availableYears[tab] || !STATE.availableYears[tab].length) {
+        STATE.availableYears[tab] = ['2022', '2023', '2024', '2025', '2026'];
+      }
+      const years = STATE.availableYears[tab];
+      if (!STATE.selectedYears[tab]) STATE.selectedYears[tab] = [];
+      let sel = [...STATE.selectedYears[tab]];
+
+      if (year === 'ALL') {
+        STATE.selectedYears[tab] = [];
+      } else {
+        // If currently all selected (empty or full), clicking a specific year isolates that year!
+        if (sel.length === 0 || sel.length === years.length) {
+          sel = [year];
+        } else {
+          const idx = sel.indexOf(year);
+          if (idx !== -1) {
+            sel.splice(idx, 1);
+            if (sel.length === 0) sel = []; // Revert to all if nothing left
+          } else {
+            sel.push(year);
+            if (sel.length === years.length) sel = []; // Revert to all if all selected
+          }
+        }
+        STATE.selectedYears[tab] = sel;
+      }
+
+      renderYearPills(tab);
+
+      if (tab === 'sales') {
+        renderSales();
+      } else if (tab === 'product') {
+        renderProduct();
       }
     }
 
