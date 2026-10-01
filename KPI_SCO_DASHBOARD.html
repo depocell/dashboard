@@ -13,6 +13,7 @@
   
   <!-- SheetJS & Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>window.XLSX || document.write('<script src="../static/xlsx.full.min.js"><\/script>')</script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
   <style>
@@ -800,115 +801,7 @@
     </div>
   </div>
 
-  <!-- Metric Cards -->
-  <section class="metric-grid">
-    <div class="metric-card" style="--card-accent: #0284c7; --icon-bg: rgba(2, 132, 199, 0.12); --icon-color: #0284c7;">
-      <div class="metric-header">
-        <span class="metric-title">Rata-rata KPI Score</span>
-        <div class="metric-icon-box"><i class="fa-solid fa-gauge-high"></i></div>
-      </div>
-      <div class="metric-value" id="cardAvgScore">0.0%</div>
-      <div class="metric-sub" id="cardAvgScoreSub">Dari data terfilter</div>
-    </div>
 
-    <div class="metric-card" style="--card-accent: #10b981; --icon-bg: rgba(16, 185, 129, 0.12); --icon-color: #10b981;">
-      <div class="metric-header">
-        <span class="metric-title">Total Insentif</span>
-        <div class="metric-icon-box"><i class="fa-solid fa-money-bill-wave"></i></div>
-      </div>
-      <div class="metric-value" id="cardTotalInsentif">Rp 0</div>
-      <div class="metric-sub" id="cardTotalInsentifSub">Akumulasi insentif</div>
-    </div>
-
-    <div class="metric-card" style="--card-accent: #8b5cf6; --icon-bg: rgba(139, 92, 246, 0.12); --icon-color: #8b5cf6;">
-      <div class="metric-header">
-        <span class="metric-title">SCO Aktif</span>
-        <div class="metric-icon-box"><i class="fa-solid fa-users"></i></div>
-      </div>
-      <div class="metric-value" id="cardCountSCO">0</div>
-      <div class="metric-sub">Personil terdata</div>
-    </div>
-
-    <div class="metric-card" style="--card-accent: #f59e0b; --icon-bg: rgba(245, 158, 11, 0.12); --icon-color: #f59e0b;">
-      <div class="metric-header">
-        <span class="metric-title">Avg Growth Trx</span>
-        <div class="metric-icon-box"><i class="fa-solid fa-arrow-trend-up"></i></div>
-      </div>
-      <div class="metric-value" id="cardAvgGrowth">0.0%</div>
-      <div class="metric-sub">Pertumbuhan vs bulan lalu</div>
-    </div>
-
-    <div class="metric-card" style="--card-accent: #06b6d4; --icon-bg: rgba(6, 182, 212, 0.12); --icon-color: #06b6d4;">
-      <div class="metric-header">
-        <span class="metric-title">Ach Visit</span>
-        <div class="metric-icon-box"><i class="fa-solid fa-location-dot"></i></div>
-      </div>
-      <div class="metric-value" id="cardAchVisit">0.0%</div>
-      <div class="metric-sub" id="cardVisitRaw">0 / 0 Visit</div>
-    </div>
-
-    <div class="metric-card" style="--card-accent: #ec4899; --icon-bg: rgba(236, 72, 153, 0.12); --icon-color: #ec4899;">
-      <div class="metric-header">
-        <span class="metric-title">Ach Collection</span>
-        <div class="metric-icon-box"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-      </div>
-      <div class="metric-value" id="cardAchColl">0.0%</div>
-      <div class="metric-sub" id="cardCollRaw">0 / 0 Coll</div>
-    </div>
-  </section>
-
-  <!-- Top 3 Podium -->
-  <section class="podium-section" id="podiumSection">
-    <div class="section-header">
-      <div class="section-title">
-        <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
-        Top Performer Leaderboard
-      </div>
-      <span style="font-size:12px; color:var(--text-muted);" id="podiumSub">Top 3 skor tertinggi pada periode ini</span>
-    </div>
-    <div class="podium-grid" id="podiumGrid">
-      <!-- Generated via JS -->
-    </div>
-  </section>
-
-  <!-- Visual Charts Grid -->
-  <section class="charts-grid">
-    <div class="chart-panel">
-      <div class="chart-header">
-        <div class="chart-title-box">
-          <h3><i class="fa-solid fa-chart-simple" style="color:var(--brand-primary)"></i> Ranking KPI Score SCO</h3>
-          <p>Peringkat pencapaian total score terhadap benchmark</p>
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="chartLeaderboard"></canvas>
-      </div>
-    </div>
-
-    <div class="chart-panel">
-      <div class="chart-header">
-        <div class="chart-title-box">
-          <h3><i class="fa-solid fa-chart-column" style="color:#10b981"></i> Pencapaian 3 Pilar Utama</h3>
-          <p>Perbandingan % Ach Visit, % Ach Collection, dan % Ach Transaksi</p>
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="chartPillars"></canvas>
-      </div>
-    </div>
-
-    <div class="chart-panel full-width">
-      <div class="chart-header">
-        <div class="chart-title-box">
-          <h3><i class="fa-solid fa-chart-line" style="color:#8b5cf6"></i> Tren Performa & Distribusi Insentif per Bulan</h3>
-          <p>Dinamika KPI Score rata-rata dan total insentif yang disalurkan</p>
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="chartTrend"></canvas>
-      </div>
-    </div>
-  </section>
 
   <!-- Detail Table Panel -->
   <section class="table-panel">
@@ -951,860 +844,400 @@
 </div>
 
 <script>
-/**
- * Executive KPI SCO Dashboard
- * Built for high precision and resilience
- */
+/* ================================================================
+   KPI SCO Dashboard — Clean Rewrite
+   Fix: Baca Excel tanpa cellDates (hindari timezone shift WIB).
+        Gunakan cell.w (formatted string "Jan-26") sebagai sumber
+        nama bulan → tidak ada lagi "Desember 2025" palsu.
+   ================================================================ */
 
-const CONFIG = {
-  sheetName: 'KPI_SCO',
-  candidateUrls: [
-    './DATA_DASHBOARD.xlsx',
-    '/bi/DATA_DASHBOARD.xlsx',
-    'DATA_DASHBOARD.xlsx'
-  ]
+// ── Konfigurasi ──────────────────────────────────────────────────
+const SHEET_NAME    = 'KPI_SCO';
+const DATA_URLS     = ['./DATA_DASHBOARD.xlsx', '/bi/DATA_DASHBOARD.xlsx', 'DATA_DASHBOARD.xlsx'];
+
+// ── State ────────────────────────────────────────────────────────
+let allData      = [];   // seluruh data hasil parse
+let shownData    = [];   // setelah filter
+let sortCol      = 'bulan';
+let sortAsc      = false;  // default: bulan terbaru dulu
+
+// ── Map bulan pendek → nama lengkap Indonesia ────────────────────
+const MONTH_MAP = {
+  'jan':'Januari','feb':'Februari','mar':'Maret','apr':'April',
+  'mei':'Mei','may':'Mei','jun':'Juni','jul':'Juli',
+  'agu':'Agustus','aug':'Agustus','sep':'September','okt':'Oktober',
+  'oct':'Oktober','nov':'November','des':'Desember','dec':'Desember'
+};
+const MONTH_NUM = {
+  'januari':'01','februari':'02','maret':'03','april':'04','mei':'05','juni':'06',
+  'juli':'07','agustus':'08','september':'09','oktober':'10','november':'11','desember':'12'
 };
 
-let rawData = [];
-let filteredData = [];
-let sortCol = 'score';
-let sortAsc = false;
+// Konversi "Jan-26" / "Jul-26" → "Januari 2026"
+function parseBulanStr(raw) {
+  if (!raw) return { label: '', key: '' };
+  const s = String(raw).trim();
 
-// Chart Instances
-let chartLeaderboardInst = null;
-let chartPillarsInst = null;
-let chartTrendInst = null;
-
-// Helper: Formatter
-const num = x => {
-  if (x === null || x === undefined || x === '') return 0;
-  if (typeof x === 'number') return isNaN(x) ? 0 : x;
-  let s = String(x).trim();
-  s = s.replace(/[^0-9,.-]/g, '');
-  if (!s) return 0;
-
-  if (s.includes(',') && s.includes('.')) {
-    if (s.lastIndexOf(',') > s.lastIndexOf('.')) {
-      // European/ID: 1.234,56
-      s = s.replace(/\./g, '').replace(',', '.');
-    } else {
-      // US: 1,234.56
-      s = s.replace(/,/g, '');
-    }
-  } else if (s.includes(',')) {
-    const parts = s.split(',');
-    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
-      s = s.replace(/,/g, '');
-    } else {
-      s = s.replace(',', '.');
-    }
-  } else if (s.includes('.')) {
-    const parts = s.split('.');
-    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3 && parseInt(parts[0]) >= 100)) {
-      s = s.replace(/\./g, '');
-    }
+  // Format "Mon-YY" atau "Mon-YYYY"
+  const m = s.match(/^([A-Za-z]+)[-\s](\d{2,4})$/);
+  if (m) {
+    const prefix = m[1].toLowerCase().slice(0, 3);
+    let yr = parseInt(m[2]);
+    if (yr < 100) yr += 2000;
+    const fullName = MONTH_MAP[prefix] || m[1];
+    const numStr   = MONTH_NUM[fullName.toLowerCase()] || '00';
+    return { label: `${fullName} ${yr}`, key: `${yr}-${numStr}` };
   }
-  return parseFloat(s) || 0;
+
+  // Format "2026-01" atau "2026-01-01"
+  const iso = s.match(/^(\d{4})-(\d{2})/);
+  if (iso) {
+    const yr = parseInt(iso[1]), mo = parseInt(iso[2]) - 1;
+    const names = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const label = `${names[mo]} ${yr}`;
+    return { label, key: `${yr}-${String(mo+1).padStart(2,'0')}` };
+  }
+
+  // Sudah bentuk "Januari 2026"
+  const parts = s.split(/\s+/);
+  if (parts.length === 2) {
+    const lc = parts[0].toLowerCase();
+    const numStr = MONTH_NUM[lc] || '00';
+    return { label: s, key: `${parts[1]}-${numStr}` };
+  }
+
+  return { label: s, key: s };
+}
+
+// Normalisasi angka, termasuk persen desimal → 0-100
+const toNum = v => {
+  if (v === null || v === undefined || v === '') return 0;
+  if (typeof v === 'number') return isNaN(v) ? 0 : v;
+  const n = parseFloat(String(v).replace(/[^0-9.,-]/g, '').replace(',', '.'));
+  return isNaN(n) ? 0 : n;
 };
+// Jika nilai persen disimpan desimal (0.867), kalikan 100
+const toPct  = v => { const n = toNum(v); return (n !== 0 && Math.abs(n) <= 2) ? n * 100 : n; };
 
-const fnum = (n, dec = 1) => new Intl.NumberFormat('id-ID', { maximumFractionDigits: dec, minimumFractionDigits: dec }).format(n || 0);
-const fcurrency = n => 'Rp ' + Math.round(n || 0).toLocaleString('id-ID');
-const fmoneyShort = n => {
-  n = n || 0;
-  if (Math.abs(n) >= 1e6) return 'Rp ' + (n / 1e6).toFixed(1) + ' Jt';
-  if (Math.abs(n) >= 1e3) return 'Rp ' + (n / 1e3).toFixed(0) + ' Rb';
-  return 'Rp ' + Math.round(n).toLocaleString('id-ID');
-};
-const esc = x => String(x ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Formatter tampilan
+const fmtNum  = (n, d=1) => new Intl.NumberFormat('id-ID',{maximumFractionDigits:d,minimumFractionDigits:d}).format(n||0);
+const fmtRp   = n => 'Rp ' + Math.round(n||0).toLocaleString('id-ID');
+const esc     = x => String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-// Date Normalizer: Converts Excel serial / ISO date to readable Indonesian Month
-function formatMonthName(rawVal) {
-  if (!rawVal) return '';
-  const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-
-  if (rawVal instanceof Date && !isNaN(rawVal.getTime())) {
-    return `${months[rawVal.getMonth()]} ${rawVal.getFullYear()}`;
-  }
-
-  // Handle Excel Serial Number (e.g. 46022)
-  if (typeof rawVal === 'number' && rawVal > 30000 && rawVal < 60000) {
-    const d = new Date(Math.round((rawVal - 25569) * 86400 * 1000));
-    return `${months[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
-  }
-
-  const s = String(rawVal).trim();
-
-  // Match 'Jan-26', 'Jul-26', 'Januari 2026', etc.
-  const mMatch = s.match(/^([A-Za-z]+)[ -](\d{2,4})/);
-  if (mMatch) {
-    const mStr = mMatch[1].toLowerCase();
-    let y = parseInt(mMatch[2]);
-    if (y < 100) y += 2000;
-    const monthMap = {
-      'jan': 'Januari', 'feb': 'Februari', 'mar': 'Maret', 'apr': 'April',
-      'mei': 'Mei', 'may': 'Mei', 'jun': 'Juni', 'jul': 'Juli',
-      'agu': 'Agustus', 'aug': 'Agustus', 'sep': 'September',
-      'okt': 'Oktober', 'oct': 'Oktober', 'nov': 'November', 'des': 'Desember', 'dec': 'Desember'
-    };
-    for (const [prefix, full] of Object.entries(monthMap)) {
-      if (mStr.startsWith(prefix)) return `${full} ${y}`;
-    }
-  }
-
-  // Match ISO '2026-01-01' or '2026-01'
-  const isoMatch = s.match(/^(\d{4})-(\d{1,2})/);
-  if (isoMatch) {
-    const y = parseInt(isoMatch[1]);
-    const m = parseInt(isoMatch[2]) - 1;
-    if (m >= 0 && m < 12) return `${months[m]} ${y}`;
-  }
-
-  return s;
+// Badge warna berdasar % (skala 0-100)
+function badge(pct) {
+  const cls = pct >= 90 ? 'badge-green' : pct >= 70 ? 'badge-yellow' : 'badge-red';
+  return `<span class="badge ${cls}">${fmtNum(pct)}%</span>`;
 }
 
-// Convert month name back to sortable "YYYY-MM"
-function getSortableMonth(mStr) {
-  const months = {
-    'januari': '01', 'februari': '02', 'maret': '03', 'april': '04', 'mei': '05', 'juni': '06',
-    'juli': '07', 'agustus': '08', 'september': '09', 'oktober': '10', 'november': '11', 'desember': '12',
-    'jan': '01', 'feb': '02', 'mar': '03', 'apr': '04', 'may': '05', 'jun': '06',
-    'jul': '07', 'aug': '08', 'sep': '09', 'okt': '10', 'nov': '11', 'des': '12', 'dec': '12'
-  };
-  const parts = String(mStr).toLowerCase().split(/\s+/);
-  if (parts.length >= 2) {
-    const m = months[parts[0]] || '00';
-    const y = parts[1];
-    return `${y}-${m}`;
-  }
-  return mStr;
-}
-
-// Badge generator for KPI Score
-function getScoreBadge(score) {
-  let cls = 'badge-red';
-  if (score >= 90) cls = 'badge-green';
-  else if (score >= 70) cls = 'badge-yellow';
-  return `<span class="badge ${cls}">${fnum(score)}%</span>`;
-}
-
-// Parse sheet robustly
-function parseSheetData(sheet) {
-  // Convert sheet to 2D array with raw values to preserve numeric precision
-  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: 0, raw: true });
+// ── Parse sheet Excel ────────────────────────────────────────────
+function parseSheet(sheet) {
+  // raw:true → angka tetap angka; TANPA cellDates supaya kolom Bulan
+  // tetap berupa serial number atau formatted string, bukan Date object
+  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
   if (rows.length < 2) return [];
 
-  // Find header row or use index 0
-  const rawHeaders = rows[0].map(c => String(c || '').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase());
-  
-  // Find column indices
-  const findIdx = (keywords, fallbackIdx) => {
-    const idx = rawHeaders.findIndex(h => keywords.every(k => h.includes(k)));
-    return idx >= 0 ? idx : fallbackIdx;
+  // Normalisasi header
+  const hdr = rows[0].map(c => String(c||'').replace(/[\r\n\s]+/g,' ').trim().toUpperCase());
+
+  const col = (keywords, fallback) => {
+    const i = hdr.findIndex(h => keywords.every(k => h.includes(k)));
+    return i >= 0 ? i : fallback;
   };
 
-  const cBulan = findIdx(['BULAN'], 0);
-  const cNama = findIdx(['NAMA'], 1);
-  const cPjp = findIdx(['PJP'], 2);
-  const cTgtVisit = findIdx(['TGT', 'VISIT'], 3);
-  const cAchVisit = findIdx(['ACH', 'VISIT'], 4);
-  const cPctVisit = 5;
-  const cTgtColl = findIdx(['TGT', 'COLL'], 6);
-  const cAchColl = findIdx(['ACH', 'COLL'], 7);
-  const cPctColl = 8;
-  const cTgtTrx = findIdx(['TGT', 'TRX'], 9);
-  const cAchTrx = findIdx(['ACH', 'TRX'], 10);
-  const cPctTrx = 11;
-  const cTrxLalu = findIdx(['TRX', 'LALU'], 12);
-  const cTrxIni = findIdx(['TRX', 'INI'], 13);
-  const cGrowth = findIdx(['GROWTH'], 14);
-  const cScore = findIdx(['SCORE'], 15);
-  const cInsentif = findIdx(['INSENTIF'], 16);
+  const C = {
+    bulan    : col(['BULAN'], 0),
+    nama     : col(['NAMA'], 1),
+    pjp      : col(['PJP'], 2),
+    tgtVisit : col(['TGT','VISIT'], 3),
+    achVisit : col(['ACH','VISIT'], 4),
+    pctVisit : 5,
+    tgtColl  : col(['TGT','COLL'], 6),
+    achColl  : col(['ACH','COLL'], 7),
+    pctColl  : 8,
+    tgtTrx   : col(['TGT','TRX'], 9),
+    achTrx   : col(['ACH','TRX'], 10),
+    pctTrx   : 11,
+    trxLalu  : col(['LALU'], 12),
+    trxIni   : col(['INI'], 13),
+    growth   : col(['GROWTH'], 14),
+    score    : col(['SCORE'], 15),
+    insentif : col(['INSENTIF'], 16),
+  };
 
-  const results = [];
-
+  const result = [];
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i];
-    if (!r || !r[cNama] || !r[cBulan]) continue;
+    if (!r[C.nama] || !r[C.bulan]) continue;
 
-    const rawNama = String(r[cNama]).trim();
-    if (!rawNama || rawNama.toLowerCase() === 'nama' || rawNama.toLowerCase() === 'total') continue;
+    const nama = String(r[C.nama]).trim();
+    if (!nama || ['nama','total',''].includes(nama.toLowerCase())) continue;
 
-    const bulanFormatted = formatMonthName(r[cBulan]);
-    const pjp = num(r[cPjp]);
-    const tgtVisit = num(r[cTgtVisit]);
-    const achVisit = num(r[cAchVisit]);
-    const tgtColl = num(r[cTgtColl]);
-    const achColl = num(r[cAchColl]);
-    const tgtTrx = num(r[cTgtTrx]);
-    const achTrx = num(r[cAchTrx]);
-    const trxLalu = num(r[cTrxLalu]);
-    const trxIni = num(r[cTrxIni]);
-    const insentif = num(r[cInsentif]);
+    // Bulan: ambil dari cell — raw:false sudah mengformat serial Excel
+    // misal kolom Bulan diformat "Jan-26" → kita dapat string itu langsung
+    const bulanRaw = String(r[C.bulan]).trim();
+    const { label: bulanLabel, key: bulanKey } = parseBulanStr(bulanRaw);
+    if (!bulanLabel) continue;
 
-    // Resilient metric calculations (Handles cases where Excel formulas are uncalculated or cached as null)
-    let pctVisit = num(r[cPctVisit]);
-    if (pctVisit === 0 && tgtVisit > 0) {
-      pctVisit = (achVisit / tgtVisit) * 100;
-    }
+    const tgtVisit = toNum(r[C.tgtVisit]);
+    const achVisit = toNum(r[C.achVisit]);
+    const tgtColl  = toNum(r[C.tgtColl]);
+    const achColl  = toNum(r[C.achColl]);
+    const tgtTrx   = toNum(r[C.tgtTrx]);
+    const achTrx   = toNum(r[C.achTrx]);
+    const trxLalu  = toNum(r[C.trxLalu]);
+    const trxIni   = toNum(r[C.trxIni]);
 
-    let pctColl = num(r[cPctColl]);
-    if (pctColl === 0 && tgtColl > 0) {
-      pctColl = (achColl / tgtColl) * 100;
-    }
+    let pctVisit = toPct(r[C.pctVisit]);
+    if (pctVisit === 0 && tgtVisit > 0) pctVisit = achVisit / tgtVisit * 100;
 
-    let pctTrx = num(r[cPctTrx]);
-    if (pctTrx === 0 && tgtTrx > 0) {
-      pctTrx = (achTrx / tgtTrx) * 100;
-    }
+    let pctColl = toPct(r[C.pctColl]);
+    if (pctColl === 0 && tgtColl > 0) pctColl = achColl / tgtColl * 100;
 
-    let growth = num(r[cGrowth]);
-    if (growth === 0 && trxLalu > 0) {
-      growth = ((trxIni - trxLalu) / trxLalu) * 100;
-    }
+    let pctTrx = toPct(r[C.pctTrx]);
+    if (pctTrx === 0 && tgtTrx > 0) pctTrx = achTrx / tgtTrx * 100;
 
-    let score = num(r[cScore]);
-    if (score === 0) {
-      // Excel Formula: (F2*0.15) + (I2*0.25) + (L2*0.35) + (O2*25%)
-      score = (pctVisit * 0.15) + (pctColl * 0.25) + (pctTrx * 0.35) + (growth * 0.25);
-    }
+    let growth = toPct(r[C.growth]);
+    if (growth === 0 && trxLalu > 0) growth = (trxIni - trxLalu) / trxLalu * 100;
 
-    results.push({
-      bulan: bulanFormatted,
-      bulanKey: getSortableMonth(bulanFormatted),
-      nama: rawNama,
-      pjp,
-      tgtVisit,
-      achVisit,
-      pctVisit,
-      tgtColl,
-      achColl,
-      pctColl,
-      tgtTrx,
-      achTrx,
-      pctTrx,
-      trxLalu,
-      trxIni,
-      growth,
+    let score = toPct(r[C.score]);
+    if (score === 0) score = pctVisit*0.15 + pctColl*0.25 + pctTrx*0.35 + growth*0.25;
+
+    result.push({
+      bulan: bulanLabel, bulanKey,
+      nama,
+      pjp: toNum(r[C.pjp]),
+      tgtVisit, achVisit, pctVisit,
+      tgtColl,  achColl,  pctColl,
+      tgtTrx,   achTrx,   pctTrx,
+      trxLalu,  trxIni,   growth,
       score,
-      insentif
+      insentif: toNum(r[C.insentif]),
     });
   }
-
-  return results;
+  return result;
 }
 
-// Populate Filters
+// ── Isi filter dropdown ──────────────────────────────────────────
 function populateFilters() {
-  const bulanSel = document.getElementById('filterBulan');
-  const namaSel = document.getElementById('filterNama');
+  const selBulan = document.getElementById('filterBulan');
+  const selNama  = document.getElementById('filterNama');
+  const prevB = selBulan.value, prevN = selNama.value;
 
-  const currBulan = bulanSel.value;
-  const currNama = namaSel.value;
-
-  // Unique Bulans with Chronological Sort
+  // Bulan unik, urutkan dari terbaru
   const bulanMap = new Map();
-  rawData.forEach(d => {
-    if (d.bulan) bulanMap.set(d.bulan, d.bulanKey);
-  });
-  const sortedBulans = Array.from(bulanMap.entries()).sort((a, b) => b[1].localeCompare(a[1])); // Newest first
+  allData.forEach(d => bulanMap.set(d.bulan, d.bulanKey));
+  const bulans = [...bulanMap.entries()].sort((a,b) => b[1].localeCompare(a[1]));
 
-  bulanSel.innerHTML = '<option value="">Semua Bulan</option>' +
-    sortedBulans.map(([b]) => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+  selBulan.innerHTML = '<option value="">Semua Bulan</option>' +
+    bulans.map(([b]) => `<option value="${esc(b)}">${esc(b)}</option>`).join('');
+  if (prevB && bulanMap.has(prevB)) selBulan.value = prevB;
 
-  if (currBulan && bulanMap.has(currBulan)) {
-    bulanSel.value = currBulan;
-  }
-
-  // Unique Names
-  const uniqueNamas = [...new Set(rawData.map(d => d.nama))].sort((a, b) => a.localeCompare(b, 'id'));
-  namaSel.innerHTML = '<option value="">Semua SCO</option>' +
-    uniqueNamas.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
-
-  if (currNama && uniqueNamas.includes(currNama)) {
-    namaSel.value = currNama;
-  }
+  // Nama unik, urut A-Z
+  const namas = [...new Set(allData.map(d => d.nama))].sort((a,b) => a.localeCompare(b,'id'));
+  selNama.innerHTML = '<option value="">Semua SCO</option>' +
+    namas.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  if (prevN && namas.includes(prevN)) selNama.value = prevN;
 }
 
-// Apply Filters & Render All
+// ── Filter & render ──────────────────────────────────────────────
 function applyFilters() {
   const bVal = document.getElementById('filterBulan').value;
   const nVal = document.getElementById('filterNama').value;
   const qVal = document.getElementById('searchInput').value.toLowerCase().trim();
 
-  filteredData = rawData.filter(d => {
-    if (bVal && d.bulan !== bVal) return false;
-    if (nVal && d.nama !== nVal) return false;
-    if (qVal && !d.nama.toLowerCase().includes(qVal)) return false;
+  shownData = allData.filter(d => {
+    if (bVal && d.bulan !== bVal)                         return false;
+    if (nVal && d.nama !== nVal)                          return false;
+    if (qVal && !d.nama.toLowerCase().includes(qVal))     return false;
     return true;
   });
-
-  renderMetricCards();
-  renderPodium();
-  renderCharts();
   renderTable();
 }
 
-// Render Metric Summary Cards
-function renderMetricCards() {
-  const d = filteredData;
-  const count = d.length;
-
-  if (count === 0) {
-    document.getElementById('cardAvgScore').textContent = '0.0%';
-    document.getElementById('cardTotalInsentif').textContent = 'Rp 0';
-    document.getElementById('cardCountSCO').textContent = '0';
-    document.getElementById('cardAvgGrowth').textContent = '0.0%';
-    document.getElementById('cardAchVisit').textContent = '0.0%';
-    document.getElementById('cardAchColl').textContent = '0.0%';
-    document.getElementById('cardVisitRaw').textContent = '0 / 0 Visit';
-    document.getElementById('cardCollRaw').textContent = '0 / 0 Coll';
-    return;
-  }
-
-  const avgScore = d.reduce((s, x) => s + x.score, 0) / count;
-  const totalInsentif = d.reduce((s, x) => s + x.insentif, 0);
-  const uniqueSCO = new Set(d.map(x => x.nama)).size;
-  const avgGrowth = d.reduce((s, x) => s + x.growth, 0) / count;
-
-  const totTgtVisit = d.reduce((s, x) => s + x.tgtVisit, 0);
-  const totAchVisit = d.reduce((s, x) => s + x.achVisit, 0);
-  const avgPctVisit = totTgtVisit > 0 ? (totAchVisit / totTgtVisit * 100) : (d.reduce((s, x) => s + x.pctVisit, 0) / count);
-
-  const totTgtColl = d.reduce((s, x) => s + x.tgtColl, 0);
-  const totAchColl = d.reduce((s, x) => s + x.achColl, 0);
-  const avgPctColl = totTgtColl > 0 ? (totAchColl / totTgtColl * 100) : (d.reduce((s, x) => s + x.pctColl, 0) / count);
-
-  document.getElementById('cardAvgScore').innerHTML = getScoreBadge(avgScore);
-  document.getElementById('cardTotalInsentif').textContent = fmoneyShort(totalInsentif);
-  document.getElementById('cardTotalInsentifSub').textContent = `${fcurrency(totalInsentif)} total`;
-  document.getElementById('cardCountSCO').textContent = uniqueSCO + ' SCO';
-  
-  const gCls = avgGrowth >= 0 ? 'positive' : 'negative';
-  document.getElementById('cardAvgGrowth').innerHTML = `<span class="growth-pill ${gCls}">${avgGrowth >= 0 ? '+' : ''}${fnum(avgGrowth)}%</span>`;
-
-  document.getElementById('cardAchVisit').textContent = fnum(avgPctVisit) + '%';
-  document.getElementById('cardVisitRaw').textContent = `${Math.round(totAchVisit).toLocaleString('id-ID')} / ${Math.round(totTgtVisit).toLocaleString('id-ID')} Visit`;
-
-  document.getElementById('cardAchColl').textContent = fnum(avgPctColl) + '%';
-  document.getElementById('cardCollRaw').textContent = `${Math.round(totAchColl).toLocaleString('id-ID')} / ${Math.round(totTgtColl).toLocaleString('id-ID')} Coll`;
-}
-
-// Render Top 3 Podium
-function renderPodium() {
-  const container = document.getElementById('podiumGrid');
-  const section = document.getElementById('podiumSection');
-
-  // Group by SCO if multiple months selected, or take individual records
-  const scoAgg = {};
-  filteredData.forEach(d => {
-    if (!scoAgg[d.nama]) {
-      scoAgg[d.nama] = { nama: d.nama, totalScore: 0, count: 0, insentif: 0, visit: 0, coll: 0, trx: 0 };
-    }
-    scoAgg[d.nama].totalScore += d.score;
-    scoAgg[d.nama].count += 1;
-    scoAgg[d.nama].insentif += d.insentif;
-    scoAgg[d.nama].visit += d.pctVisit;
-    scoAgg[d.nama].coll += d.pctColl;
-    scoAgg[d.nama].trx += d.pctTrx;
-  });
-
-  const ranked = Object.values(scoAgg).map(x => ({
-    nama: x.nama,
-    avgScore: x.totalScore / x.count,
-    insentif: x.insentif,
-    avgVisit: x.visit / x.count,
-    avgColl: x.coll / x.count,
-    avgTrx: x.trx / x.count
-  })).sort((a, b) => b.avgScore - a.avgScore);
-
-  if (ranked.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-  section.style.display = 'block';
-
-  const top3 = ranked.slice(0, 3);
-  const rankIcons = ['🥇', '🥈', '🥉'];
-
-  container.innerHTML = top3.map((sco, idx) => {
-    const initials = sco.nama.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-    return `
-      <div class="podium-card rank-${idx + 1}">
-        <div class="podium-rank-badge">${rankIcons[idx]}</div>
-        <div class="podium-avatar">${initials}</div>
-        <div class="podium-name">${esc(sco.nama)}</div>
-        <div class="podium-score-pill">${getScoreBadge(sco.avgScore)}</div>
-        <div class="podium-stats-row">
-          <div class="podium-stat-item">
-            <span class="podium-stat-label">Visit</span>
-            <span class="podium-stat-val">${fnum(sco.avgVisit)}%</span>
-          </div>
-          <div class="podium-stat-item">
-            <span class="podium-stat-label">Coll</span>
-            <span class="podium-stat-val">${fnum(sco.avgColl)}%</span>
-          </div>
-          <div class="podium-stat-item">
-            <span class="podium-stat-label">Insentif</span>
-            <span class="podium-stat-val">${fmoneyShort(sco.insentif)}</span>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// Render Charts
-function renderCharts() {
-  const isDark = document.body.classList.contains('dark-theme');
-  const textColor = isDark ? '#94a3b8' : '#64748b';
-  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-
-  // Chart 1: Leaderboard Bar Chart (Grouped by SCO)
-  const scoScoreMap = {};
-  filteredData.forEach(d => {
-    if (!scoScoreMap[d.nama]) scoScoreMap[d.nama] = { total: 0, count: 0 };
-    scoScoreMap[d.nama].total += d.score;
-    scoScoreMap[d.nama].count += 1;
-  });
-
-  const chartData1 = Object.entries(scoScoreMap).map(([nama, val]) => ({
-    nama,
-    avgScore: val.total / val.count
-  })).sort((a, b) => b.avgScore - a.avgScore);
-
-  const ctx1 = document.getElementById('chartLeaderboard').getContext('2d');
-  if (chartLeaderboardInst) chartLeaderboardInst.destroy();
-
-  chartLeaderboardInst = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: chartData1.map(x => x.nama),
-      datasets: [
-        {
-          label: 'KPI Score (%)',
-          data: chartData1.map(x => parseFloat(x.avgScore.toFixed(1))),
-          backgroundColor: chartData1.map(x => {
-            if (x.avgScore >= 90) return '#10b981';
-            if (x.avgScore >= 70) return '#f59e0b';
-            return '#ef4444';
-          }),
-          borderRadius: 8,
-          barThickness: 22
-        }
-      ]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => `Score: ${ctx.raw}%`
-          }
-        }
-      },
-      scales: {
-        x: {
-          min: 0,
-          max: 100,
-          ticks: { color: textColor, callback: v => v + '%' },
-          grid: { color: gridColor }
-        },
-        y: {
-          ticks: { color: textColor, font: { weight: 600 } },
-          grid: { display: false }
-        }
-      }
-    }
-  });
-
-  // Chart 2: 3 Pillars (Visit, Coll, Trx) Grouped Bar
-  const scoPillarsMap = {};
-  filteredData.forEach(d => {
-    if (!scoPillarsMap[d.nama]) scoPillarsMap[d.nama] = { vTot: 0, cTot: 0, tTot: 0, count: 0 };
-    scoPillarsMap[d.nama].vTot += d.pctVisit;
-    scoPillarsMap[d.nama].cTot += d.pctColl;
-    scoPillarsMap[d.nama].tTot += d.pctTrx;
-    scoPillarsMap[d.nama].count += 1;
-  });
-
-  const chartData2 = Object.entries(scoPillarsMap).map(([nama, v]) => ({
-    nama,
-    v: v.vTot / v.count,
-    c: v.cTot / v.count,
-    t: v.tTot / v.count
-  }));
-
-  const ctx2 = document.getElementById('chartPillars').getContext('2d');
-  if (chartPillarsInst) chartPillarsInst.destroy();
-
-  chartPillarsInst = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: chartData2.map(x => x.nama.split(' ')[0]),
-      datasets: [
-        {
-          label: '% Ach Visit (15%)',
-          data: chartData2.map(x => parseFloat(x.v.toFixed(1))),
-          backgroundColor: '#0284c7',
-          borderRadius: 6
-        },
-        {
-          label: '% Ach Coll (25%)',
-          data: chartData2.map(x => parseFloat(x.c.toFixed(1))),
-          backgroundColor: '#10b981',
-          borderRadius: 6
-        },
-        {
-          label: '% Ach Trx (35%)',
-          data: chartData2.map(x => parseFloat(x.t.toFixed(1))),
-          backgroundColor: '#8b5cf6',
-          borderRadius: 6
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { color: textColor, boxWidth: 12, font: { size: 11, weight: 600 } }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => `${ctx.dataset.label}: ${ctx.raw}%`
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: textColor, font: { weight: 600 } },
-          grid: { display: false }
-        },
-        y: {
-          min: 0,
-          ticks: { color: textColor, callback: v => v + '%' },
-          grid: { color: gridColor }
-        }
-      }
-    }
-  });
-
-  // Chart 3: Monthly Trend Combo (Score Line + Insentif Bar)
-  const monthMap = {};
-  rawData.forEach(d => {
-    if (!monthMap[d.bulan]) {
-      monthMap[d.bulan] = { bulan: d.bulan, key: d.bulanKey, totalScore: 0, count: 0, insentif: 0 };
-    }
-    monthMap[d.bulan].totalScore += d.score;
-    monthMap[d.bulan].count += 1;
-    monthMap[d.bulan].insentif += d.insentif;
-  });
-
-  const sortedMonths = Object.values(monthMap).sort((a, b) => a.key.localeCompare(b.key));
-
-  const ctx3 = document.getElementById('chartTrend').getContext('2d');
-  if (chartTrendInst) chartTrendInst.destroy();
-
-  chartTrendInst = new Chart(ctx3, {
-    data: {
-      labels: sortedMonths.map(x => x.bulan),
-      datasets: [
-        {
-          type: 'line',
-          label: 'Rata-rata KPI Score (%)',
-          data: sortedMonths.map(x => parseFloat((x.totalScore / x.count).toFixed(1))),
-          borderColor: '#0284c7',
-          backgroundColor: 'rgba(2, 132, 199, 0.1)',
-          fill: true,
-          tension: 0.35,
-          borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          yAxisID: 'yScore'
-        },
-        {
-          type: 'bar',
-          label: 'Total Insentif (Juta Rp)',
-          data: sortedMonths.map(x => parseFloat((x.insentif / 1e6).toFixed(2))),
-          backgroundColor: isDark ? 'rgba(16, 185, 129, 0.5)' : 'rgba(16, 185, 129, 0.7)',
-          borderRadius: 8,
-          barThickness: 28,
-          yAxisID: 'yInsentif'
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { color: textColor, boxWidth: 12, font: { size: 11, weight: 600 } }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              if (ctx.dataset.yAxisID === 'yScore') return `KPI Score: ${ctx.raw}%`;
-              return `Insentif: Rp ${ctx.raw} Juta`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: textColor, font: { weight: 600 } },
-          grid: { display: false }
-        },
-        yScore: {
-          type: 'linear',
-          position: 'left',
-          min: 0,
-          max: 100,
-          ticks: { color: '#0284c7', callback: v => v + '%' },
-          grid: { color: gridColor },
-          title: { display: true, text: 'KPI Score (%)', color: '#0284c7' }
-        },
-        yInsentif: {
-          type: 'linear',
-          position: 'right',
-          min: 0,
-          ticks: { color: '#10b981', callback: v => 'Rp ' + v + 'M' },
-          grid: { display: false },
-          title: { display: true, text: 'Insentif (Juta Rp)', color: '#10b981' }
-        }
-      }
-    }
-  });
-}
-
-// Sort Table
-function sortTable(column) {
-  if (sortCol === column) {
-    sortAsc = !sortAsc;
-  } else {
-    sortCol = column;
-    sortAsc = column === 'nama' || column === 'bulan';
-  }
+// ── Sort ─────────────────────────────────────────────────────────
+function sortTable(col) {
+  if (sortCol === col) { sortAsc = !sortAsc; }
+  else { sortCol = col; sortAsc = (col === 'nama'); }
   renderTable();
 }
 
-// Render Table
+// ── Render tabel ─────────────────────────────────────────────────
 function renderTable() {
-  const tbody = document.getElementById('tableBody');
-  const d = [...filteredData];
+  const rows = [...shownData];
 
-  // Sorting
-  d.sort((a, b) => {
-    let valA = a[sortCol];
-    let valB = b[sortCol];
-
-    if (sortCol === 'rank') {
-      valA = a.score;
-      valB = b.score;
-      return sortAsc ? valA - valB : valB - valA;
+  // Sort
+  rows.sort((a, b) => {
+    let va, vb;
+    if (sortCol === 'bulan' || sortCol === 'rank') {
+      va = a.bulanKey; vb = b.bulanKey;
+      const res = sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+      if (res !== 0) return res;
+      // secondary: nama A-Z
+      return a.nama.localeCompare(b.nama, 'id');
     }
-
-    if (typeof valA === 'string') {
-      return sortAsc ? valA.localeCompare(valB, 'id') : valB.localeCompare(valA, 'id');
+    va = a[sortCol]; vb = b[sortCol];
+    if (typeof va === 'string') {
+      return sortAsc ? va.localeCompare(vb,'id') : vb.localeCompare(va,'id');
     }
-    return sortAsc ? (valA - valB) : (valB - valA);
+    return sortAsc ? va - vb : vb - va;
   });
 
-  document.getElementById('tableSummaryText').textContent = `Menampilkan ${d.length} catatan performa SCO`;
+  // Update ikon sort di header
+  document.querySelectorAll('#kpiTable thead th').forEach(th => {
+    const m = (th.getAttribute('onclick')||'').match(/sortTable\('([^']+)'\)/);
+    if (!m) return;
+    const ico = th.querySelector('i');
+    if (!ico) return;
+    if (m[1] === sortCol) {
+      ico.className = sortAsc ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
+      th.style.color = 'var(--brand-primary)';
+    } else {
+      ico.className = 'fa-solid fa-sort';
+      th.style.color = '';
+    }
+  });
 
-  if (d.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:36px; color:var(--text-muted); font-size:13px;">Tidak ada data yang sesuai dengan filter.</td></tr>';
+  document.getElementById('tableSummaryText').textContent =
+    `Menampilkan ${rows.length} catatan performa SCO`;
+
+  const tbody = document.getElementById('tableBody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;padding:36px;color:var(--text-muted);font-size:13px;">Tidak ada data yang sesuai dengan filter.</td></tr>';
     return;
   }
 
-  tbody.innerHTML = d.map((r, idx) => {
-    const growthCls = r.growth >= 0 ? 'positive' : 'negative';
-    const growthSign = r.growth >= 0 ? '+' : '';
-
+  tbody.innerHTML = rows.map((r, i) => {
+    const gSign = r.growth >= 0 ? '+' : '';
+    const gCls  = r.growth >= 0 ? 'positive' : 'negative';
     return `
       <tr>
-        <td style="font-weight:700; color:var(--text-light);">${idx + 1}</td>
+        <td style="font-weight:700;color:var(--text-light)">${i+1}</td>
         <td><span class="tag-month">${esc(r.bulan)}</span></td>
         <td class="name-col">${esc(r.nama)}</td>
         <td class="num">${Math.round(r.pjp)}</td>
-        <td class="num">${fnum(r.achVisit, 0)} <span style="font-size:10px; color:var(--text-light);">/ ${fnum(r.tgtVisit, 0)}</span></td>
-        <td class="num">${getScoreBadge(r.pctVisit)}</td>
-        <td class="num">${fnum(r.achColl, 0)} <span style="font-size:10px; color:var(--text-light);">/ ${fnum(r.tgtColl, 0)}</span></td>
-        <td class="num">${getScoreBadge(r.pctColl)}</td>
-        <td class="num">${fnum(r.achTrx, 1)} <span style="font-size:10px; color:var(--text-light);">/ ${fnum(r.tgtTrx, 1)}</span></td>
-        <td class="num">${getScoreBadge(r.pctTrx)}</td>
-        <td class="num"><span class="growth-pill ${growthCls}">${growthSign}${fnum(r.growth)}%</span></td>
-        <td class="num">${getScoreBadge(r.score)}</td>
-        <td class="num" style="font-weight:700; color:var(--brand-primary);">${fcurrency(r.insentif)}</td>
-      </tr>
-    `;
+        <td class="num">${fmtNum(r.achVisit,0)} <span style="font-size:10px;color:var(--text-light)">/ ${fmtNum(r.tgtVisit,0)}</span></td>
+        <td class="num">${badge(r.pctVisit)}</td>
+        <td class="num">${fmtNum(r.achColl,0)} <span style="font-size:10px;color:var(--text-light)">/ ${fmtNum(r.tgtColl,0)}</span></td>
+        <td class="num">${badge(r.pctColl)}</td>
+        <td class="num">${fmtNum(r.achTrx,1)} <span style="font-size:10px;color:var(--text-light)">/ ${fmtNum(r.tgtTrx,1)}</span></td>
+        <td class="num">${badge(r.pctTrx)}</td>
+        <td class="num"><span class="growth-pill ${gCls}">${gSign}${fmtNum(r.growth)}%</span></td>
+        <td class="num">${badge(r.score)}</td>
+        <td class="num" style="font-weight:700;color:var(--brand-primary)">${fmtRp(r.insentif)}</td>
+      </tr>`;
   }).join('');
 }
 
-// Export Table to CSV
+// ── Export CSV ───────────────────────────────────────────────────
 function exportTableToCSV() {
-  if (filteredData.length === 0) {
-    alert('Tidak ada data untuk diexport!');
-    return;
-  }
-
-  const headers = ['Bulan', 'Nama SCO', '#PJP', 'Tgt Visit', 'Ach Visit', '% Ach Visit', 'Tgt Coll', 'Ach Coll', '% Ach Coll', 'Tgt Trx', 'Ach Trx', '% Ach Trx', 'Trx Lalu', 'Trx Ini', '% Growth', 'KPI Score', 'Insentif (Rp)'];
-  
-  const csvRows = [
-    headers.join(';')
-  ];
-
-  filteredData.forEach(r => {
-    csvRows.push([
-      `"${r.bulan}"`,
-      `"${r.nama}"`,
-      r.pjp,
-      r.tgtVisit,
-      r.achVisit,
-      `${r.pctVisit.toFixed(2)}%`,
-      r.tgtColl,
-      r.achColl,
-      `${r.pctColl.toFixed(2)}%`,
-      r.tgtTrx,
-      r.achTrx,
-      `${r.pctTrx.toFixed(2)}%`,
-      r.trxLalu,
-      r.trxIni,
-      `${r.growth.toFixed(2)}%`,
-      `${r.score.toFixed(2)}%`,
-      r.insentif
-    ].join(';'));
+  if (!shownData.length) { alert('Tidak ada data untuk diexport!'); return; }
+  const hdr = ['Bulan','Nama SCO','#PJP','Tgt Visit','Ach Visit','% Visit','Tgt Coll','Ach Coll','% Coll','Tgt Trx','Ach Trx','% Trx','Trx Lalu','Trx Ini','% Growth','KPI Score','Insentif (Rp)'];
+  const rows = shownData.map(r => [
+    `"${r.bulan}"`,`"${r.nama}"`,r.pjp,r.tgtVisit,r.achVisit,
+    `${r.pctVisit.toFixed(2)}%`,r.tgtColl,r.achColl,`${r.pctColl.toFixed(2)}%`,
+    r.tgtTrx,r.achTrx,`${r.pctTrx.toFixed(2)}%`,r.trxLalu,r.trxIni,
+    `${r.growth.toFixed(2)}%`,`${r.score.toFixed(2)}%`,r.insentif
+  ].join(';'));
+  const csv = '\uFEFF' + [hdr.join(';'), ...rows].join('\r\n');
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})),
+    download: `KPI_SCO_${new Date().toISOString().slice(0,10)}.csv`
   });
-
-  const blob = new Blob(['\uFEFF' + csvRows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `KPI_SCO_Export_${new Date().toISOString().slice(0,10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
-// Theme Switcher
+// ── Theme ────────────────────────────────────────────────────────
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
-  const isDark = document.body.classList.contains('dark-theme');
-  localStorage.setItem('kpi_sco_theme', isDark ? 'dark' : 'light');
-  
-  const btn = document.getElementById('btnThemeToggle');
-  btn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-  
-  renderCharts();
+  const dark = document.body.classList.contains('dark-theme');
+  localStorage.setItem('kpi_sco_theme', dark ? 'dark' : 'light');
+  document.getElementById('btnThemeToggle').innerHTML =
+    dark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
 }
-
 function initTheme() {
-  const saved = localStorage.getItem('kpi_sco_theme');
-  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  const s = localStorage.getItem('kpi_sco_theme');
+  if (s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
     document.body.classList.add('dark-theme');
     document.getElementById('btnThemeToggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
   }
 }
 
-// Status Updates
-function setStatus(msg, state = 'normal') {
-  const dot = document.getElementById('statusDot');
+// ── Status chip ──────────────────────────────────────────────────
+function setStatus(msg, state='normal') {
+  const dot  = document.getElementById('statusDot');
   const text = document.getElementById('statusText');
-  
-  dot.className = 'status-dot';
-  if (state === 'loading') dot.classList.add('loading');
-  if (state === 'error') dot.classList.add('error');
-  
+  dot.className = 'status-dot' + (state==='loading'?' loading':state==='error'?' error':'');
   text.textContent = msg;
 }
 
-// Main Loader
+// ── Load data ────────────────────────────────────────────────────
 async function reloadData() {
-  const refreshBtn = document.getElementById('btnRefresh');
-  refreshBtn.disabled = true;
-  refreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat...';
+  const btn = document.getElementById('btnRefresh');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat...';
   setStatus('Mengunduh DATA_DASHBOARD.xlsx...', 'loading');
   document.getElementById('alertBanner').style.display = 'none';
 
-  let success = false;
-
-  for (const url of CONFIG.candidateUrls) {
+  let ok = false;
+  for (const url of DATA_URLS) {
     try {
-      const fetchUrl = url + '?t=' + Date.now();
-      const res = await fetch(fetchUrl, { cache: 'no-store' });
+      const res = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
       if (!res.ok) continue;
-
       const buf = await res.arrayBuffer();
-      const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
-      const sheet = wb.Sheets[CONFIG.sheetName] || wb.Sheets[wb.SheetNames[0]];
+      // raw:false → SheetJS memformat cell date sebagai string "Jan-26"
+      // Tidak ada cellDates:true → tidak ada timezone shift WIB
+      const wb    = XLSX.read(new Uint8Array(buf), { type: 'array' });
+      const sheet = wb.Sheets[SHEET_NAME] || wb.Sheets[wb.SheetNames[0]];
+      if (!sheet) throw new Error(`Sheet ${SHEET_NAME} tidak ditemukan`);
 
-      if (!sheet) throw new Error(`Sheet ${CONFIG.sheetName} tidak ditemukan`);
-
-      rawData = parseSheetData(sheet);
-      if (rawData.length === 0) throw new Error('Data sheet kosong atau format kolom tidak sesuai');
+      allData = parseSheet(sheet);
+      if (!allData.length) throw new Error('Data kosong');
 
       populateFilters();
       applyFilters();
-
-      setStatus(`${rawData.length} data dimuat • Sheet: ${CONFIG.sheetName}`, 'normal');
-      success = true;
+      setStatus(`${allData.length} baris dimuat · Sheet: ${SHEET_NAME}`);
+      ok = true;
       break;
-    } catch (e) {
-      console.warn(`Gagal memuat dari ${url}:`, e);
-    }
+    } catch(e) { console.warn('Gagal:', url, e); }
   }
 
-  if (!success) {
+  if (!ok) {
     setStatus('Gagal memuat otomatis', 'error');
     document.getElementById('alertBanner').style.display = 'flex';
-    document.getElementById('alertMsg').textContent = 'Tidak dapat memuat DATA_DASHBOARD.xlsx otomatis (CORS / path). Silakan gunakan tombol pilih file:';
+    document.getElementById('alertMsg').textContent =
+      'Tidak dapat memuat DATA_DASHBOARD.xlsx otomatis. Pilih file manual:';
   }
 
-  refreshBtn.disabled = false;
-  refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Refresh';
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Refresh';
 }
 
-// Manual File Handler Fallback
 function handleManualFile(input) {
   const file = input.files[0];
   if (!file) return;
-
-  setStatus(`Membaca file manual: ${file.name}...`, 'loading');
+  setStatus(`Membaca: ${file.name}...`, 'loading');
   const reader = new FileReader();
-  
-  reader.onload = function(e) {
+  reader.onload = e => {
     try {
-      const buf = e.target.result;
-      const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
-      const sheet = wb.Sheets[CONFIG.sheetName] || wb.Sheets[wb.SheetNames[0]];
-
-      if (!sheet) throw new Error(`Sheet ${CONFIG.sheetName} tidak ditemukan di file ini`);
-
-      rawData = parseSheetData(sheet);
+      const wb    = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const sheet = wb.Sheets[SHEET_NAME] || wb.Sheets[wb.SheetNames[0]];
+      if (!sheet) throw new Error('Sheet tidak ditemukan');
+      allData = parseSheet(sheet);
       populateFilters();
       applyFilters();
-
-      setStatus(`${rawData.length} data manual tersinkron`, 'normal');
+      setStatus(`${allData.length} baris dimuat`);
       document.getElementById('alertBanner').style.display = 'none';
-    } catch (err) {
-      alert('Gagal memproses file: ' + err.message);
+    } catch(err) {
+      alert('Gagal: ' + err.message);
       setStatus('Gagal membaca file', 'error');
     }
   };
-
   reader.readAsArrayBuffer(file);
 }
 
-// Initialization on DOM Ready
-document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-  reloadData();
-});
+// ── Init ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => { initTheme(); reloadData(); });
 </script>
 
 </body>

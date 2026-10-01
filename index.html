@@ -1268,35 +1268,6 @@
           </div>
         </div>
 
-        <!-- Detailed Margin Table -->
-        <div class="table-panel">
-          <div class="table-panel-header">
-            <div class="chart-title"><i class="fa-solid fa-table-list"></i>Detail Matriks Gross Margin & Profit per Produk</div>
-            <div style="font-size:12px; color:var(--text-muted);" id="marginTableRowCount">0 varian</div>
-          </div>
-          <div class="table-wrapper">
-            <table class="data-table" id="marginTable">
-              <thead>
-                <tr>
-                  <th>Tahun</th>
-                  <th>Bulan</th>
-                  <th>Cabang</th>
-                  <th>Kategori</th>
-                  <th>Operator</th>
-                  <th>Paket</th>
-                  <th style="text-align:right">Total Hit</th>
-                  <th style="text-align:right">Total Revenue</th>
-                  <th style="text-align:right">Total HPP</th>
-                  <th style="text-align:right">Gross Profit</th>
-                  <th style="text-align:right">Margin %</th>
-                  <th style="text-align:right; color:var(--brand-primary); font-weight:800;">Profit / Trx</th>
-                  <th style="text-align:right">Profit / Day</th>
-                </tr>
-              </thead>
-              <tbody id="marginTableBody"></tbody>
-            </table>
-          </div>
-        </div>
       </section>
 
       <!-- ============================================== -->
@@ -2405,27 +2376,6 @@
         }
       });
 
-      // Margin Table: sorted by Profit / Trx descending by default
-      document.getElementById('marginTableRowCount').textContent = `${filtered.length} varian`;
-      const tableRows = [...filtered].sort((a,b) => parseNum(getVal(b, 'Margin / Trx')) - parseNum(getVal(a, 'Margin / Trx')));
-      const body = document.getElementById('marginTableBody');
-      body.innerHTML = tableRows.slice(0, 150).map(r => `
-        <tr>
-          <td>${esc(getVal(r, 'TAHUN', 'Tahun'))}</td>
-          <td><b>${esc(getVal(r, 'MONTH', 'Bulan'))}</b></td>
-          <td><span class="yoy-badge flat">${esc(getVal(r, 'CABANG', 'Cabang', 'CHANNEL', 'Channel'))}</span></td>
-          <td><span class="yoy-badge flat">${esc(getVal(r, 'KATEGORI', 'Kategori'))}</span></td>
-          <td style="font-weight:700;">${esc(getVal(r, 'OPERATOR', 'Operator'))}</td>
-          <td>${esc(getVal(r, 'PAKET', 'Paket'))}</td>
-          <td style="text-align:right; font-weight:700;">${fmt(parseNum(getVal(r, 'Total Hit')), 0)}</td>
-          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Total Revenue')))}</td>
-          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Total HPP')))}</td>
-          <td style="text-align:right; font-weight:700; color:var(--success);">${fmtRp(parseNum(getVal(r, 'Gross Profit')))}</td>
-          <td style="text-align:right;">${fmt(parseNum(getVal(r, 'Gross Margin %')), 2)}%</td>
-          <td style="text-align:right; font-weight:800; color:var(--brand-primary);">${fmtRp(parseNum(getVal(r, 'Margin / Trx')))}</td>
-          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Margin / Day')))}</td>
-        </tr>
-      `).join('');
     }
 
     function resetMarginFilters() {
