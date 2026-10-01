@@ -111,6 +111,8 @@
       flex: 1;
       margin-left: 270px;
       min-height: 100vh;
+      min-width: 0;
+      max-width: calc(100vw - 270px);
       display: flex;
       flex-direction: column;
       transition: var(--transition);
@@ -355,6 +357,8 @@
     .app-content {
       padding: 24px 28px 48px;
       flex: 1;
+      min-width: 0;
+      width: 100%;
     }
 
     /* Year Pills Multiselect Bar */
@@ -624,6 +628,8 @@
       padding: 22px;
       margin-bottom: 22px;
       box-shadow: var(--shadow-sm);
+      min-width: 0;
+      max-width: 100%;
     }
     .table-panel-header {
       display: flex;
@@ -689,6 +695,8 @@
 
     .tab-view {
       display: none;
+      min-width: 0;
+      width: 100%;
       animation: fadeIn 0.25s ease-out;
     }
     .tab-view.active {
@@ -729,7 +737,7 @@
     @media (max-width: 992px) {
       .app-sidebar { transform: translateX(-100%); }
       .app-sidebar.show { transform: translateX(0); }
-      .app-main { margin-left: 0; }
+      .app-main { margin-left: 0; max-width: 100vw; }
       .toggle-sidebar-btn { display: block; }
     }
     @media (max-width: 640px) {
@@ -801,7 +809,7 @@
       </a>
       <a class="nav-item" data-tab="margin" onclick="switchTab('margin')">
         <i class="fa-solid fa-hand-holding-dollar"></i>
-        <span>Gross Margin & Cuan/Trx</span>
+        <span>Gross Margin & Profit/Trx</span>
       </a>
       <a class="nav-item" data-tab="agen" onclick="switchTab('agen')">
         <i class="fa-solid fa-users-line"></i>
@@ -1007,19 +1015,6 @@
           </div>
         </div>
 
-        <!-- Sales Detailed Table -->
-        <div class="table-panel">
-          <div class="table-panel-header">
-            <div class="chart-title"><i class="fa-solid fa-table"></i>Detail Data Penjualan Bulanan</div>
-            <div style="font-size:12px; color:var(--text-muted);" id="salesTableRowCount">0 baris</div>
-          </div>
-          <div class="table-wrapper">
-            <table class="data-table" id="salesDetailTable">
-              <thead><tr id="salesTableHead"></tr></thead>
-              <tbody id="salesTableBody"></tbody>
-            </table>
-          </div>
-        </div>
       </section>
 
       <!-- ============================================== -->
@@ -1083,59 +1078,7 @@
         </div>
 
         <!-- 5 CHARTS (Vertical Stacked One-by-One, Full-Width) -->
-        <!-- 1. Tren Hit per Month -->
-        <div class="chart-panel">
-          <div class="chart-panel-header">
-            <div>
-              <div class="chart-title"><i class="fa-solid fa-bullseye" style="color:#06bbcf;"></i>Tren Hit per Month</div>
-              <div class="chart-subtitle">Total Succes Hit per bulan</div>
-            </div>
-          </div>
-          <div class="chart-container-wrap">
-            <canvas id="hitMonthChart"></canvas>
-          </div>
-        </div>
-
-        <!-- 2. Tren Revenue per Month -->
-        <div class="chart-panel">
-          <div class="chart-panel-header">
-            <div>
-              <div class="chart-title"><i class="fa-solid fa-wallet" style="color:#dd9317;"></i>Tren Revenue per Month</div>
-              <div class="chart-subtitle">Total Revenue per bulan</div>
-            </div>
-          </div>
-          <div class="chart-container-wrap">
-            <canvas id="revMonthChart"></canvas>
-          </div>
-        </div>
-
-        <!-- 3. Tren Hit / Day -->
-        <div class="chart-panel">
-          <div class="chart-panel-header">
-            <div>
-              <div class="chart-title"><i class="fa-solid fa-chart-line" style="color:#087eb9;"></i>Tren Hit / Day</div>
-              <div class="chart-subtitle">Daily Trx setiap bulannya</div>
-            </div>
-          </div>
-          <div class="chart-container-wrap">
-            <canvas id="hitChart"></canvas>
-          </div>
-        </div>
-
-        <!-- 4. Tren Rev / Day -->
-        <div class="chart-panel">
-          <div class="chart-panel-header">
-            <div>
-              <div class="chart-title"><i class="fa-solid fa-money-bill-trend-up" style="color:#138a5c;"></i>Tren Rev / Day</div>
-              <div class="chart-subtitle">Daily Revenue setiap bulannya</div>
-            </div>
-          </div>
-          <div class="chart-container-wrap">
-            <canvas id="revDayChart"></canvas>
-          </div>
-        </div>
-
-        <!-- 5. Tren Rev / Hit (ARPU) -->
+        <!-- 1. Tren Rev / Hit (ARPU) -->
         <div class="chart-panel">
           <div class="chart-panel-header">
             <div>
@@ -1148,35 +1091,62 @@
           </div>
         </div>
 
-        <div class="table-panel">
-          <div class="table-panel-header">
-            <div class="chart-title"><i class="fa-solid fa-boxes-stacked"></i>Matriks Performa Produk</div>
-            <div style="font-size:12px; color:var(--text-muted);" id="prodTableRowCount">0 produk</div>
+        <!-- 2. Tren Hit per Month -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-bullseye" style="color:#06bbcf;"></i>Tren Hit per Month</div>
+              <div class="chart-subtitle">Total Succes Hit per bulan</div>
+            </div>
           </div>
-          <div class="table-wrapper">
-            <table class="data-table" id="productTable">
-              <thead>
-                <tr>
-                  <th>Tahun</th>
-                  <th>Bulan</th>
-                  <th>Kategori</th>
-                  <th>Operator</th>
-                  <th>Paket</th>
-                  <th style="text-align:right">Total Hit</th>
-                  <th style="text-align:right">Total Revenue</th>
-                  <th style="text-align:right">Hit / Hari</th>
-                  <th style="text-align:right">Rev / Hari</th>
-                  <th style="text-align:right">Rev / Hit</th>
-                </tr>
-              </thead>
-              <tbody id="productTableBody"></tbody>
-            </table>
+          <div class="chart-container-wrap">
+            <canvas id="hitMonthChart"></canvas>
           </div>
         </div>
+
+        <!-- 3. Tren Revenue per Month -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-wallet" style="color:#dd9317;"></i>Tren Revenue per Month</div>
+              <div class="chart-subtitle">Total Revenue per bulan</div>
+            </div>
+          </div>
+          <div class="chart-container-wrap">
+            <canvas id="revMonthChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 4. Tren Hit / Day -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-chart-line" style="color:#087eb9;"></i>Tren Hit / Day</div>
+              <div class="chart-subtitle">Daily Trx setiap bulannya</div>
+            </div>
+          </div>
+          <div class="chart-container-wrap">
+            <canvas id="hitChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 5. Tren Rev / Day -->
+        <div class="chart-panel">
+          <div class="chart-panel-header">
+            <div>
+              <div class="chart-title"><i class="fa-solid fa-money-bill-trend-up" style="color:#138a5c;"></i>Tren Rev / Day</div>
+              <div class="chart-subtitle">Daily Revenue setiap bulannya</div>
+            </div>
+          </div>
+          <div class="chart-container-wrap">
+            <canvas id="revDayChart"></canvas>
+          </div>
+        </div>
+
       </section>
 
       <!-- ============================================== -->
-      <!-- TAB: GROSS MARGIN & CUAN PER TRANSAKSI         -->
+      <!-- TAB: GROSS MARGIN & PROFIT PER TRANSAKSI       -->
       <!-- ============================================== -->
       <section class="tab-view" id="view-margin">
         <!-- Year Pills Multiselect (Di bawah header) -->
@@ -1208,12 +1178,12 @@
           </div>
         </div>
 
-        <!-- KPI Cards: Cuan per Trx Highlighted -->
+        <!-- KPI Cards: Profit per Trx Highlighted -->
         <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-          <!-- STAR HIGHLIGHT CARD: CUAN PER TRX -->
+          <!-- STAR HIGHLIGHT CARD: PROFIT PER TRX -->
           <div class="kpi-card" style="border: 2px solid var(--brand-primary); background: linear-gradient(135deg, var(--bg-card), rgba(2, 132, 199, 0.08));">
             <div class="kpi-header">
-              <span class="kpi-label" style="color:var(--brand-primary); font-weight:800;">⭐ Cuan per Trx</span>
+              <span class="kpi-label" style="color:var(--brand-primary); font-weight:800;">⭐ Profit per Trx</span>
               <div class="kpi-icon" style="background:var(--brand-gradient); color:#fff;"><i class="fa-solid fa-hand-holding-dollar"></i></div>
             </div>
             <div class="kpi-value" id="m-cuan-trx" style="color:var(--brand-primary); font-size:26px;">—</div>
@@ -1241,16 +1211,16 @@
           <div class="kpi-card">
             <div class="kpi-header"><span class="kpi-label">Profit / Day</span><div class="kpi-icon"><i class="fa-solid fa-calendar-day"></i></div></div>
             <div class="kpi-value" id="m-profit-day">—</div>
-            <div class="kpi-subtext">Rata-rata Cuan Harian</div>
+            <div class="kpi-subtext">Rata-rata Profit Harian</div>
           </div>
         </div>
 
         <!-- 4 Visual Analytics Charts: Vertical Stacked Panels -->
-        <!-- 1. Tren Cuan per Trx -->
+        <!-- 1. Tren Profit per Trx -->
         <div class="chart-panel">
           <div class="chart-panel-header">
             <div>
-              <div class="chart-title"><i class="fa-solid fa-arrow-trend-up" style="color:#087eb9;"></i>Tren Cuan / Trx per Bulan</div>
+              <div class="chart-title"><i class="fa-solid fa-arrow-trend-up" style="color:#087eb9;"></i>Tren Profit / Trx per Bulan</div>
               <div class="chart-subtitle">Pergerakan rata-rata margin bersih per transaksi (Rp/Trx)</div>
             </div>
           </div>
@@ -1301,7 +1271,7 @@
         <!-- Detailed Margin Table -->
         <div class="table-panel">
           <div class="table-panel-header">
-            <div class="chart-title"><i class="fa-solid fa-table-list"></i>Detail Matriks Gross Margin & Cuan per Produk</div>
+            <div class="chart-title"><i class="fa-solid fa-table-list"></i>Detail Matriks Gross Margin & Profit per Produk</div>
             <div style="font-size:12px; color:var(--text-muted);" id="marginTableRowCount">0 varian</div>
           </div>
           <div class="table-wrapper">
@@ -1319,7 +1289,7 @@
                   <th style="text-align:right">Total HPP</th>
                   <th style="text-align:right">Gross Profit</th>
                   <th style="text-align:right">Margin %</th>
-                  <th style="text-align:right; color:var(--brand-primary); font-weight:800;">Cuan / Trx</th>
+                  <th style="text-align:right; color:var(--brand-primary); font-weight:800;">Profit / Trx</th>
                   <th style="text-align:right">Profit / Day</th>
                 </tr>
               </thead>
@@ -1651,7 +1621,7 @@
         overview: 'Executive Overview',
         sales: 'Sales & Distribution Analysis',
         product: 'Product Performance Matrix',
-        margin: 'Gross Margin & Cuan per Transaksi',
+        margin: 'Gross Margin & Profit per Transaksi',
         agen: 'Tren Transaksi Agen & Downline'
       };
       document.getElementById('titleText').textContent = titles[tabId] || 'Dashboard';
@@ -1895,21 +1865,6 @@
         }
       });
 
-      // Table Render
-      document.getElementById('salesTableRowCount').textContent = `${filtered.length} baris`;
-      const head = document.getElementById('salesTableHead');
-      head.innerHTML = '<th>Tahun</th><th>Bulan</th><th>Cabang</th><th style="text-align:right">Daily Trx</th><th style="text-align:right">Daily Member</th>';
-
-      const body = document.getElementById('salesTableBody');
-      body.innerHTML = filtered.slice(0, 100).map(r => `
-        <tr>
-          <td>${esc(getVal(r, 'Tahun', 'TAHUN'))}</td>
-          <td><b>${esc(getVal(r, 'Bulan', 'MONTH'))}</b></td>
-          <td><span class="yoy-badge flat">${esc(getVal(r, 'Cabang', 'CABANG'))}</span></td>
-          <td style="text-align:right; font-weight:700;">${fmt(parseNum(getVal(r, 'Daily Trx', 'Trx')), 1)}</td>
-          <td style="text-align:right;">${fmt(parseNum(getVal(r, 'Daily Member')), 0)}</td>
-        </tr>
-      `).join('');
     }
 
     function resetSalesFilters() {
@@ -2188,23 +2143,6 @@
         }
       });
 
-      // Product Table
-      document.getElementById('prodTableRowCount').textContent = `${filtered.length} varian produk`;
-      const body = document.getElementById('productTableBody');
-      body.innerHTML = filtered.slice(0, 100).map(r => `
-        <tr>
-          <td>${esc(getVal(r, 'TAHUN', 'Tahun'))}</td>
-          <td><b>${esc(getVal(r, 'MONTH', 'Bulan'))}</b></td>
-          <td><span class="yoy-badge flat">${esc(getVal(r, 'KATEGORI', 'Kategori'))}</span></td>
-          <td style="font-weight:700;">${esc(getVal(r, 'OPERATOR', 'Operator'))}</td>
-          <td>${esc(getVal(r, 'PAKET', 'Paket'))}</td>
-          <td style="text-align:right; font-weight:700;">${fmt(parseNum(getVal(r, 'Total Hit')), 0)}</td>
-          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Total Revenue')))}</td>
-          <td style="text-align:right;">${fmt(parseNum(getVal(r, 'Hit / Day')), 1)}</td>
-          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Rev / Day')))}</td>
-          <td style="text-align:right;">${fmtRp(parseNum(getVal(r, 'Rev / Hit')))}</td>
-        </tr>
-      `).join('');
     }
 
     function resetProductFilters() {
@@ -2217,7 +2155,7 @@
     }
 
     // =========================================================================
-    // TAB: GROSS MARGIN & CUAN PER TRANSAKSI
+    // TAB: GROSS MARGIN & PROFIT PER TRANSAKSI
     // =========================================================================
     function renderMargin() {
       const isAstaga = STATE.brand === 'ASTAGA';
@@ -2318,7 +2256,7 @@
         data: {
           labels: chartLabels,
           datasets: [{
-            label: 'Cuan / Trx (Rp)',
+            label: 'Profit / Trx (Rp)',
             data: cuanTrxMonthData,
             borderColor: '#087eb9',
             backgroundColor: 'rgba(8, 126, 185, 0.12)',
@@ -2467,7 +2405,7 @@
         }
       });
 
-      // Margin Table: sorted by Cuan / Trx descending by default
+      // Margin Table: sorted by Profit / Trx descending by default
       document.getElementById('marginTableRowCount').textContent = `${filtered.length} varian`;
       const tableRows = [...filtered].sort((a,b) => parseNum(getVal(b, 'Margin / Trx')) - parseNum(getVal(a, 'Margin / Trx')));
       const body = document.getElementById('marginTableBody');
